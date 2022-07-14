@@ -54,6 +54,13 @@ config :keycloak_basic, Keycloak.Plug.VerifyBasicAuthToken,
   -----END PUBLIC KEY-----
   """
 
+config :keycloak_basic, ChatWeb.ChatRoomChannel,
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
+       -----END PUBLIC KEY-----
+       """
+
 config :keycloak_google, Keycloak.Plug.VerifyGoogleAuthToken,
   public_key: """
   -----BEGIN PUBLIC KEY-----
