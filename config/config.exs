@@ -8,7 +8,8 @@
 import Config
 
 config :chat,
-  ecto_repos: [Chat.Repo]
+  ecto_repos: [Chat.Repo],
+  generators: [binary_id: true]
 
 # Configures the endpoint
 config :chat, ChatWeb.Endpoint,
@@ -54,14 +55,21 @@ config :keycloak_basic, Keycloak.Plug.VerifyBasicAuthToken,
   -----END PUBLIC KEY-----
   """
 
-config :keycloak_basic, ChatWeb.ChatRoomChannel,
-       public_key: """
-       -----BEGIN PUBLIC KEY-----
-       MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
-       -----END PUBLIC KEY-----
-       """
+config :keycloak_basic,  ChatWeb.Authentication.Native.VerifyToken,
+  public_key: """
+  -----BEGIN PUBLIC KEY-----
+  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
+  -----END PUBLIC KEY-----
+  """
 
 config :keycloak_google, Keycloak.Plug.VerifyGoogleAuthToken,
+  public_key: """
+  -----BEGIN PUBLIC KEY-----
+  MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB
+  -----END PUBLIC KEY-----
+  """
+
+config :keycloak_google, ChatWeb.Authentication.Google.VerifyToken,
   public_key: """
   -----BEGIN PUBLIC KEY-----
   MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB

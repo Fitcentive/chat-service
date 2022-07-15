@@ -1,6 +1,9 @@
 defmodule ChatWeb.UserSocket do
   use Phoenix.Socket
 
+  alias ChatWeb.Authentication.Native.VerifyToken, as: VerifyNativeAuthToken
+  alias ChatWeb.Authentication.Google.VerifyToken, as: VerifyGoogleAuthToken
+
   # A Socket handler
   #
   # It's possible to control the websocket connection and
@@ -36,8 +39,22 @@ defmodule ChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+  def connect(%{"token" => token, "provider" => provider}, socket, _connect_info) do
+    case provider do
+      "native" ->
+        case VerifyNativeAuthToken.verify_token(token) do
+          {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
+          {:error, message}                      ->  :error
+        end
+
+      "google" ->
+        case VerifyGoogleAuthToken.verify_token(token) do
+          {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
+          {:error, message}                      ->  :error
+        end
+
+      _        -> false
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

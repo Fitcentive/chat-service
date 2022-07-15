@@ -1,12 +1,13 @@
 defmodule ChatWeb.ChatRoomChannel do
   use ChatWeb, :channel
 
-  use Joken.Config
-  alias JOSE.JWK
+  alias ChatWeb.Authentication.Native.VerifyToken, as: VerifyNativeAuthToken
+  alias ChatWeb.Authentication.Google.VerifyToken, as: VerifyGoogleAuthToken
 
+  # Might also have to check here to see if user is authorized to publish to the channel in question...
   @impl true
   def join("chat_room:lobby", payload, socket) do
-    if authorized?(payload) do
+    if authorized?(payload, socket) do
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -15,7 +16,7 @@ defmodule ChatWeb.ChatRoomChannel do
 
   @impl true
   def join("chat_room:" <> _private_room_id, payload, socket) do
-    if authorized?(payload) do
+    if authorized?(payload, socket) do
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -40,47 +41,12 @@ defmodule ChatWeb.ChatRoomChannel do
   end
 
   # Add authorization logic here as required.
-  defp authorized?(%{"token" => auth_token, "body" => content} = payload) do
-    case verify_token(auth_token) do
-      {:ok, claims} -> true
-      {:error, message} -> false
-    end
-
-  end
-
-
-  def token_config() do
-    default_claims(
-      aud: "account",
-      iss: "http://api.vid.app/auth/realms/NativeAuth"
-    )
-  end
-
-  @spec verify_token(String.t() | nil) :: {atom(), Joken.Token.t() | atom()}
-  def verify_token(nil), do: {:error, :not_authenticated}
-
-  def verify_token(token) do
-    verify_and_validate(token, signer_key())
-  end
-
-  @spec signer_key() :: Joken.Signer.t()
-  def signer_key() do
-    {config, _} =
-      :keycloak_basic
-      |> Application.get_env(__MODULE__, [])
-      |> Keyword.split([:hmac, :public_key])
-
-    case config do
-      [public_key: public_key] ->
-        %Joken.Signer{
-          alg: "RS256",
-          jwk: JWK.from_pem(public_key),
-        }
-
-      _ ->
-        raise "No signer configuration present for #{__MODULE__}"
+  defp authorized?(%{"user_id" => userId, "body" => content} = payload, socket) do
+    if socket.assigns[:user_id] == userId do
+      true
+    else
+      false
     end
   end
-
 
 end
