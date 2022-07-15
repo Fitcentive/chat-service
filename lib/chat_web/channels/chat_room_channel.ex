@@ -1,8 +1,8 @@
 defmodule ChatWeb.ChatRoomChannel do
   use ChatWeb, :channel
 
-  alias ChatWeb.Authentication.Native.VerifyToken, as: VerifyNativeAuthToken
-  alias ChatWeb.Authentication.Google.VerifyToken, as: VerifyGoogleAuthToken
+  import Chat.Repo.Chats
+  alias Chat.Repo.Chats
 
   # Might also have to check here to see if user is authorized to publish to the channel in question...
   @impl true
@@ -17,6 +17,7 @@ defmodule ChatWeb.ChatRoomChannel do
   @impl true
   def join("chat_room:" <> _private_room_id, payload, socket) do
     if authorized?(payload, socket) do
+
       {:ok, socket}
     else
       {:error, %{reason: "unauthorized"}}

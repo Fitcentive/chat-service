@@ -22,7 +22,7 @@ defmodule ChatWeb.Router do
   scope "/", ChatWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", ChatController, :index
   end
 
   # Other scopes may use custom stacks.
@@ -30,7 +30,9 @@ defmodule ChatWeb.Router do
     pipe_through :authentication
     pipe_through :api
 
-    get "/", PageController, :testauth
+    get "/", ChatController, :testauth
+
+    post "/get-chat-room", ChatController, :get_chat_room
 
    end
 

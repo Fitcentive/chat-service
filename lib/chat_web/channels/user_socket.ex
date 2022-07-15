@@ -1,6 +1,9 @@
 defmodule ChatWeb.UserSocket do
   use Phoenix.Socket
 
+  import Chat.Repo.Chats
+  alias Chat.Repo.Chats
+
   alias ChatWeb.Authentication.VerifyBearerToken
 
   # A Socket handler
@@ -46,7 +49,14 @@ defmodule ChatWeb.UserSocket do
     %{"kid" => key_id} = Poison.decode!(rawHeader)
 
     case VerifyBearerToken.verify_token(token, key_id) do
-      {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
+      {:ok, %{
+        "user_id" => userId,
+        "given_name" => first_name,
+        "family_name" => last_name
+      } = claims} ->
+        Chats.upsert_user(%{id: userId, first_name: first_name, last_name: last_name, is_active: true})
+        {:ok, assign(socket, :user_id, userId)}
+
       {:error, message}                      ->  :error
     end
 

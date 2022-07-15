@@ -56,6 +56,7 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/unicode_util_compat" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/phoenix_live_dashboard" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/poison" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/elixir_uuid" />
     </content>
     <orderEntry type="jdk" jdkName="Elixir 1.13.4" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -131,5 +132,8 @@
     <orderEntry type="library" name="jiffy" level="project" />
     <orderEntry type="library" name="json" level="project" />
     <orderEntry type="library" name="tiny" level="project" />
+    <orderEntry type="library" name="elixir_uuid" level="project" />
+    <orderEntry type="library" name="earmark" level="project" />
+    <orderEntry type="library" name="benchfella" level="project" />
   </component>
 </module>

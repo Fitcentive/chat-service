@@ -52,6 +52,7 @@ defmodule Chat.MixProject do
       {:joken, "~> 2.0"},
       {:oauth2, "~> 2.0"},
       {:poison, "~> 5.0"},
+      {:elixir_uuid, "~> 1.2" },
     ]
   end
 

@@ -4,7 +4,7 @@ defmodule Chat.Schema.Room do
 
   import Ecto.Changeset
 
-  @primary_key {:id, :binary_id, autogenerate: true}
+  @primary_key {:id, :binary_id, autogenerate: false}
   @foreign_key_type :binary_id
   schema "room" do
     field :name, :string
@@ -22,8 +22,8 @@ defmodule Chat.Schema.Room do
     #  Ecto validate_required/3 throw errors and remove the column when an empty string
     #  Also setting the list of empty_values in cast/4 to not consider "" as empty. By default it is [""]
     room
-    |> cast(params, [:name, :type])
-    |> validate_required([:type])
+    |> cast(params, [:id, :name, :type])
+    |> validate_required([:id, :type])
     |> put_change(:created_at, time)
     |> put_change(:updated_at, time)
   end
