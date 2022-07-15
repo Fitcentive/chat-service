@@ -6,7 +6,6 @@ defmodule ChatWeb.PageController do
   end
 
   def testauth(conn, _params) do
-    IO.puts("Authenticated successfully")
     text(conn, "From messenger")
   end
 end

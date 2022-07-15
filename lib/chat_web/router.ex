@@ -15,12 +15,8 @@ defmodule ChatWeb.Router do
 
   end
 
-  pipeline :authentication_basic do
-    plug Keycloak.Plug.VerifyBasicAuthToken
-  end
-
-  pipeline :authentication_google do
-    plug Keycloak.Plug.VerifyGoogleAuthToken
+  pipeline :authentication do
+    plug ChatWeb.Plugs.VerifyAuthToken
   end
 
   scope "/", ChatWeb do
@@ -31,18 +27,10 @@ defmodule ChatWeb.Router do
 
   # Other scopes may use custom stacks.
    scope "/api/chat", ChatWeb do
-     pipe_through :api
+    pipe_through :authentication
+    pipe_through :api
 
-     scope "/basic" do
-       pipe_through :authentication_basic
-       get "/", PageController, :testauth
-     end
-
-     scope "/google" do
-       pipe_through :authentication_google
-       get "/", PageController, :testauth
-     end
-
+    get "/", PageController, :testauth
 
    end
 

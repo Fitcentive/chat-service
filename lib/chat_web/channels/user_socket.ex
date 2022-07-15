@@ -1,8 +1,7 @@
 defmodule ChatWeb.UserSocket do
   use Phoenix.Socket
 
-  alias ChatWeb.Authentication.Native.VerifyToken, as: VerifyNativeAuthToken
-  alias ChatWeb.Authentication.Google.VerifyToken, as: VerifyGoogleAuthToken
+  alias ChatWeb.Authentication.VerifyBearerToken
 
   # A Socket handler
   #
@@ -26,7 +25,6 @@ defmodule ChatWeb.UserSocket do
   channel "chat_room:*", ChatWeb.ChatRoomChannel
 
 
-
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
   # verification, you can put default assigns into
@@ -39,22 +37,19 @@ defmodule ChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(%{"token" => token, "provider" => provider}, socket, _connect_info) do
-    case provider do
-      "native" ->
-        case VerifyNativeAuthToken.verify_token(token) do
-          {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
-          {:error, message}                      ->  :error
-        end
+  def connect(%{"token" => token}, socket, _connect_info) do
 
-      "google" ->
-        case VerifyGoogleAuthToken.verify_token(token) do
-          {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
-          {:error, message}                      ->  :error
-        end
+    [{:ok, rawHeader} | rest ] = token
+                                 |> String.split(".")
+                                 |> Enum.map(&(Base.decode64(&1, padding: false)))
 
-      _        -> false
+    %{"kid" => key_id} = Poison.decode!(rawHeader)
+
+    case VerifyBearerToken.verify_token(token, key_id) do
+      {:ok, %{"user_id" => userId} = claims} -> {:ok, assign(socket, :user_id, userId)}
+      {:error, message}                      ->  :error
     end
+
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
