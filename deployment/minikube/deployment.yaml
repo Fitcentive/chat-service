@@ -53,4 +53,10 @@ spec:
               value: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB"
             - name: GOOGLE_AUTH_ISSUER
               value: "http://api.vid.app/auth/realms/GoogleAuth"
+            - name: DATABASE_URL
+              value: "ecto://postgres:postgres@192.168.64.3/postgres"
+            - name: SECRET_KEY_BASE
+              value: "+V4JJUEQH/9NgEcRJUL4hxZn6Vag1naJkSb+ms4EJeHp1tOiTFeFRZPBhcLpDtah"
+            - name: PHX_HOST
+              value: "api.vid.app"
 
