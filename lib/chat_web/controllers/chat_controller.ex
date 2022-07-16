@@ -12,6 +12,10 @@ defmodule ChatWeb.ChatController do
     text(conn, "From messenger")
   end
 
+  def server_health(conn, _params) do
+    send_resp(conn, :ok, "Server is alive!")
+  end
+
   def get_chat_room(conn, %{"current_user" => current_user, "target_user" => target_user}) do
     user_id = conn.assigns[:claims]["user_id"]
     room_name = [current_user, target_user]

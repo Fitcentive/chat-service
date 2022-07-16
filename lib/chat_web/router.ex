@@ -19,6 +19,8 @@ defmodule ChatWeb.Router do
     plug ChatWeb.Plugs.VerifyAuthToken
   end
 
+  get "/api/chat/health", ChatWeb.ChatController, :server_health
+
   scope "/", ChatWeb do
     pipe_through :browser
 
@@ -31,7 +33,7 @@ defmodule ChatWeb.Router do
     pipe_through :api
 
     post "/get-chat-room", ChatController, :get_chat_room
-    get "/room/:room_id/messages", ChatController, :get_room_messages
+    get  "/room/:room_id/messages", ChatController, :get_room_messages
 
 
    end
