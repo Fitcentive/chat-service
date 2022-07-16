@@ -54,7 +54,7 @@ spec:
             - name: GOOGLE_AUTH_ISSUER
               value: "http://api.vid.app/auth/realms/GoogleAuth"
             - name: DATABASE_URL
-              value: "ecto://postgres:postgres@192.168.64.3/postgres"
+              value: "ecto://postgres:postgres@192.168.64.3:1212/postgres"
             - name: SECRET_KEY_BASE
               value: "+V4JJUEQH/9NgEcRJUL4hxZn6Vag1naJkSb+ms4EJeHp1tOiTFeFRZPBhcLpDtah"
             - name: PHX_HOST
