@@ -48,27 +48,29 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
-  keyIdPublicKeys: %{
-    "ZK_xufw1gGfVqJ-3a4aJM9EzZRfxp1Z6_AH2fCpYvtk" => %{
-      public_key: """
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB
-      -----END PUBLIC KEY-----
-      """,
-      iss: "http://api.vid.app/auth/realms/GoogleAuth"
-    },
-
-    "Dhb5KyQiZHEBLrAhiYltrBLEamD4nnh61eFM4FsnGO0" => %{
-      public_key: """
-      -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
-      -----END PUBLIC KEY-----
-      """,
-      iss: "http://api.vid.app/auth/realms/NativeAuth"
-    },
-  }
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
+   keyIdPublicKeys: %{
+     System.get_env("NATIVE_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("NATIVE_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("NATIVE_AUTH_ISSUER")
+     },
+
+     System.get_env("GOOGLE_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("GOOGLE_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("GOOGLE_AUTH_ISSUER")
+     },
+   }
+
+
