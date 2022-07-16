@@ -34,6 +34,23 @@ defmodule ChatWeb.ChatRoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+
+  @impl true
+  def handle_in("shout", %{"body" => text, "image_url" => image_url} = payload, socket) do
+    room_id = socket.assigns[:room_id]
+    user_id = socket.assigns[:user_id]
+    IO.inspect("MATCHED ON THIS BABY")
+    with message <- Chats.create_message_with_metadata(%{
+      "sender_id" => user_id,
+      "room_id" => room_id,
+      "text" => text,
+      "image_url" => image_url,
+    }) do
+      broadcast(socket, "shout", payload)
+      {:noreply, socket}
+    end
+  end
+
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (chat_room:lobby).
   @impl true

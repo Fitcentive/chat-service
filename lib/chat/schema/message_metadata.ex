@@ -5,7 +5,7 @@ defmodule Chat.Schema.MessageMetadata do
   import Ecto.Changeset
 
   @primary_key {:id, :binary_id, autogenerate: true}
-  schema "message" do
+  schema "message_metadata" do
     field :message_id, Ecto.UUID
     field :image_url, :string
 
@@ -20,9 +20,6 @@ defmodule Chat.Schema.MessageMetadata do
       NaiveDateTime.utc_now()
       |> NaiveDateTime.truncate(:second)
 
-    #  Not validating the column 'value' to allow empty strings to be stored as Attribute Values
-    #  Ecto validate_required/3 throw errors and remove the column when an empty string
-    #  Also setting the list of empty_values in cast/4 to not consider "" as empty. By default it is [""]
     message_metadata
     |> cast(params, [:message_id, :image_url])
     |> validate_required([:message_id])

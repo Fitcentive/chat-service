@@ -2,6 +2,7 @@ defmodule Chat.Repo.Chats do
   import Ecto.Query, warn: false
 
   alias Chat.Repo
+  alias Ecto.Multi
 
   alias Chat.Schema.Message
   alias Chat.Schema.MessageMetadata
@@ -44,6 +45,8 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  #------------------------------------------------------------------------------------------------------------
+
   def upsert_user(user_params) do
     Repo.insert!(
       user_changeset(user_params),
@@ -58,15 +61,6 @@ defmodule Chat.Repo.Chats do
       room_changeset(room_params),
       on_conflict: {:replace, [:updated_at, :name]},
       conflict_target: :id,
-      returning: true,
-    )
-  end
-
-  def create_message_metadata(message_metadata_params) do
-    Repo.insert!(
-      message_metadata_changeset(message_metadata_params),
-      on_conflict: {:replace, [:updated_at, :image_url]},
-      conflict_target: :message_id,
       returning: true,
     )
   end
@@ -86,15 +80,52 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  def create_message_metadata(message_metadata_params) do
+    Repo.insert!(
+      message_metadata_changeset(message_metadata_params),
+      on_conflict: {:replace, [:updated_at, :image_url]},
+      conflict_target: :id,
+      returning: true,
+    )
+  end
+
+  def create_message_with_metadata(%{
+    "sender_id" => user_id,
+    "room_id" => room_id,
+    "text" => text,
+    "image_url" => image_url,
+  }) do
+    with new_message <- create_message(%{
+      "sender_id" => user_id,
+      "room_id" => room_id,
+      "text" => text,
+    }) do
+      create_message_metadata(%{
+        "message_id" => new_message.id,
+        "image_url" => image_url
+      })
+    end
+  end
+
   def get_messages(room_id) do
-    query = from message in Message,
-                 select: message,
-                 where: message.room_id == ^room_id,
-                 distinct: true
+    query =
+      from message in Message,
+        left_join: message_metadata in MessageMetadata,
+        on: message.id == message_metadata.message_id,
+        select: %{
+          id: message.id,
+          sender_id: message.sender_id,
+          room_id: message.sender_id,
+          text: message.text,
+          created_at: message.created_at,
+          updated_at: message.updated_at,
+          image_url: message_metadata.image_url,
+        },
+        where: message.room_id == ^room_id,
+        distinct: true
 
     query
     |> Repo.all
   end
-
 
 end
