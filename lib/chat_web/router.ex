@@ -30,10 +30,9 @@ defmodule ChatWeb.Router do
     pipe_through :authentication
     pipe_through :api
 
-    get "/", ChatController, :testauth
+    post "/get-chat-room", ChatController, :get_chat_room
     get "/room/:room_id/messages", ChatController, :get_room_messages
 
-    post "/get-chat-room", ChatController, :get_chat_room
 
    end
 

@@ -25,6 +25,7 @@ defmodule ChatWeb.ChatView do
       sender_id: message.sender_id,
       room_id: message.room_id,
       text: message.text,
+      image_url: message.image_url,
       created_at: message.created_at,
       updated_at: message.updated_at
     }

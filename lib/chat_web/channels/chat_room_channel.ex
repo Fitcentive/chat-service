@@ -4,16 +4,7 @@ defmodule ChatWeb.ChatRoomChannel do
   import Chat.Repo.Chats
   alias Chat.Repo.Chats
 
-  # Might also have to check here to see if user is authorized to publish to the channel in question...
-  @impl true
-  def join("chat_room:lobby", payload, socket) do
-    if authorized?(payload, socket) do
-      {:ok, socket}
-    else
-      {:error, %{reason: "unauthorized"}}
-    end
-  end
-
+  # todo - Use Phoenix.presence to track user active status
   @impl true
   def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
     if authorized?(payload, socket) do
@@ -39,7 +30,6 @@ defmodule ChatWeb.ChatRoomChannel do
   def handle_in("shout", %{"body" => text, "image_url" => image_url} = payload, socket) do
     room_id = socket.assigns[:room_id]
     user_id = socket.assigns[:user_id]
-    IO.inspect("MATCHED ON THIS BABY")
     with message <- Chats.create_message_with_metadata(%{
       "sender_id" => user_id,
       "room_id" => room_id,

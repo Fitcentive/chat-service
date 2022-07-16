@@ -89,6 +89,7 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  # Todo - replace with with Ecto.Multi
   def create_message_with_metadata(%{
     "sender_id" => user_id,
     "room_id" => room_id,
