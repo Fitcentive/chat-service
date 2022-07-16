@@ -29,6 +29,7 @@ defmodule ChatWeb.Plugs.VerifyAuthToken do
       |> get_req_header("authorization")
       |> fetch_token()
 
+      # todo - no token returns 500 instead of 401
     [{:ok, rawHeader} | rest ] = token
       |> String.split(".")
       |> Enum.map(&(Base.decode64(&1, padding: false)))

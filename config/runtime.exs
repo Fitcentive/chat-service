@@ -80,4 +80,25 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
+    keyIdPublicKeys: %{
+     System.get_env("NATIVE_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("NATIVE_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("NATIVE_AUTH_ISSUER")
+     },
+
+     System.get_env("GOOGLE_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("GOOGLE_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("GOOGLE_AUTH_ISSUER")
+     },
+    }
 end
