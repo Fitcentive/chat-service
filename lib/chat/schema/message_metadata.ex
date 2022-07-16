@@ -25,7 +25,7 @@ defmodule Chat.Schema.MessageMetadata do
     #  Also setting the list of empty_values in cast/4 to not consider "" as empty. By default it is [""]
     message_metadata
     |> cast(params, [:message_id, :image_url])
-    |> validate_required([:message_id, :image_url])
+    |> validate_required([:message_id])
     |> put_change(:created_at, time)
     |> put_change(:updated_at, time)
   end

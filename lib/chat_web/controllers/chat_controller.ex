@@ -23,7 +23,15 @@ defmodule ChatWeb.ChatController do
     with room <- Chats.upsert_room(new_room) do
       render(conn, "show_room.json", room: room)
     end
-
-
   end
+
+  def get_room_messages(conn,  %{"room_id" => room_id}) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with messages <- Chats.get_messages(room_id) do
+      render(conn, "show_messages.json", messages: messages)
+    end
+  end
+
+
 end

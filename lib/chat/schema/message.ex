@@ -32,8 +32,8 @@ defmodule Chat.Schema.Message do
     #  Ecto validate_required/3 throw errors and remove the column when an empty string
     #  Also setting the list of empty_values in cast/4 to not consider "" as empty. By default it is [""]
     message
-    |> cast(params, [:sender_id, :room_id, :metadata_id, :text])
-    |> validate_required([:sender_id, :room_id, :metadata_id, :text])
+    |> cast(params, [:sender_id, :room_id, :text])
+    |> validate_required([:sender_id, :room_id, :text])
     |> put_change(:created_at, time)
     |> put_change(:updated_at, time)
   end

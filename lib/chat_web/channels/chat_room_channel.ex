@@ -15,10 +15,11 @@ defmodule ChatWeb.ChatRoomChannel do
   end
 
   @impl true
-  def join("chat_room:" <> _private_room_id, payload, socket) do
+  def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
     if authorized?(payload, socket) do
-
-      {:ok, socket}
+      with room_user <- Chats.upsert_room_user(%{"room_id" => room_id, "user_id" => user_id}) do
+        {:ok, assign(socket, :room_id, room_id)}
+      end
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -36,14 +37,22 @@ defmodule ChatWeb.ChatRoomChannel do
   # It is also common to receive messages from the client and
   # broadcast to everyone in the current topic (chat_room:lobby).
   @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
-    {:noreply, socket}
+  def handle_in("shout", %{"body" => text} = payload, socket) do
+    room_id = socket.assigns[:room_id]
+    user_id = socket.assigns[:user_id]
+    with message <- Chats.create_message(%{
+      "sender_id" => user_id,
+      "room_id" => room_id,
+      "text" => text,
+    }) do
+      broadcast(socket, "shout", payload)
+      {:noreply, socket}
+    end
   end
 
   # Add authorization logic here as required.
-  defp authorized?(%{"user_id" => userId, "body" => content} = payload, socket) do
-    if socket.assigns[:user_id] == userId do
+  defp authorized?(%{"user_id" => user_id, "body" => content} = payload, socket) do
+    if socket.assigns[:user_id] == user_id do
       true
     else
       false
