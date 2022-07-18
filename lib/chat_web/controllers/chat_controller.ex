@@ -3,6 +3,7 @@ defmodule ChatWeb.ChatController do
 
   alias Chat.Repo.Chats
 
+  action_fallback ChatWeb.FallbackController
 
   def index(conn, _params) do
     render(conn, "index.html")
@@ -32,7 +33,8 @@ defmodule ChatWeb.ChatController do
   def get_room_messages(conn,  %{"room_id" => room_id}) do
     user_id = conn.assigns[:claims]["user_id"]
 
-    with messages <- Chats.get_messages(room_id) do
+    with :ok <- Bodyguard.permit(Chats, :get_room_messages, user_id, room_id),
+    messages <- Chats.get_messages(room_id) do
       render(conn, "show_messages.json", messages: messages)
     end
   end

@@ -10,6 +10,22 @@ defmodule Chat.Repo.Chats do
   alias Chat.Schema.RoomUser
   alias Chat.Schema.User
 
+  alias Chat.Repo.Chats
+
+  @behaviour Bodyguard.Policy
+
+  def authorize(:get_room_messages, user_id, room_id) do
+    case Chats.get_room_user_if_exists(room_id, user_id) do
+      nil -> :error
+      _   -> :ok
+    end
+
+  end
+
+  # Otherwise, denied
+  def authorize(:update_post, _user, _post), do: :error
+
+
   defp room_changeset(room_params) do
     Room.changeset(
       %Room{},
@@ -68,7 +84,8 @@ defmodule Chat.Repo.Chats do
   def upsert_room_user(room_user_params) do
     Repo.insert!(
       room_user_changeset(room_user_params),
-      on_conflict: :nothing,
+      on_conflict: {:replace, [:updated_at]},
+      conflict_target: [:room_id, :user_id],
       returning: true,
     )
   end
@@ -127,6 +144,17 @@ defmodule Chat.Repo.Chats do
 
     query
     |> Repo.all
+  end
+
+  def get_room_user_if_exists(room_id, user_id) do
+    query =
+      from room_user in RoomUser,
+      select: room_user,
+      where: room_user.room_id == ^room_id and room_user.user_id == ^user_id
+
+  query
+    |> Repo.one
+
   end
 
 end

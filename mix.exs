@@ -53,6 +53,7 @@ defmodule Chat.MixProject do
       {:oauth2, "~> 2.0"},
       {:poison, "~> 5.0"},
       {:elixir_uuid, "~> 1.2" },
+      {:bodyguard, "~> 2.4"},
     ]
   end
 
