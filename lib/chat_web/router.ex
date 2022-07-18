@@ -35,6 +35,8 @@ defmodule ChatWeb.Router do
     post "/get-chat-room", ChatController, :get_chat_room
     get  "/room/:room_id/messages", ChatController, :get_room_messages
 
+    get "/user/rooms", ChatController, :get_user_rooms
+
 
    end
 

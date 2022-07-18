@@ -7,15 +7,12 @@ defmodule ChatWeb.ChatRoomChannel do
   # todo - Use Phoenix.presence to track user active status
   @impl true
   def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
-    if authorized?(payload, socket) do
-      with room_user <- Chats.upsert_room_user(%{"room_id" => room_id, "user_id" => user_id}) do
-        {:ok, assign(socket, :room_id, room_id)}
-      end
+    if authorized?(room_id, user_id, socket) do
+      {:ok, assign(socket, :room_id, room_id)}
     else
       {:error, %{reason: "unauthorized"}}
     end
   end
-
 
 
   # Channels can be used in a request/response fashion
@@ -57,13 +54,17 @@ defmodule ChatWeb.ChatRoomChannel do
     end
   end
 
-  # Add authorization logic here as required.
-  defp authorized?(%{"user_id" => user_id, "body" => content} = payload, socket) do
-    if socket.assigns[:user_id] == user_id do
-      true
+  defp authorized?(room_id, user_id, socket) do
+    if (socket.assigns[:user_id] == user_id) do
+      case Bodyguard.permit(Chats, :get_room_messages, user_id, room_id) do
+        :ok -> true
+        _   -> false
+      end
     else
       false
     end
   end
+
+
 
 end

@@ -3,6 +3,17 @@ defmodule ChatWeb.ChatView do
 
   alias ChatWeb.ChatView
 
+  def render("show_rooms.json", %{rooms: rooms}) do
+    render_many(rooms, ChatView, "show_room_with_users.json", as: :room_with_users)
+  end
+
+  def render("show_room_with_users.json", %{room_with_users: room_with_users}) do
+    %{
+      room_id: room_with_users.room_id,
+      user_ids: Enum.map(room_with_users.user_ids, &(UUID.binary_to_string!(&1))),
+    }
+  end
+
   def render("show_room.json", %{room: room}) do
     %{
       id: room.id,

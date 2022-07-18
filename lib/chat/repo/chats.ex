@@ -19,12 +19,15 @@ defmodule Chat.Repo.Chats do
       nil -> :error
       _   -> :ok
     end
-
   end
 
-  # Otherwise, denied
-  def authorize(:update_post, _user, _post), do: :error
+  #----------------------------------------------------------------------------
 
+  defmacro array_agg(field) do
+    quote do: fragment("array_agg(?)", unquote(field))
+  end
+
+  #----------------------------------------------------------------------------
 
   defp room_changeset(room_params) do
     Room.changeset(
@@ -123,6 +126,25 @@ defmodule Chat.Repo.Chats do
         "image_url" => image_url
       })
     end
+  end
+
+  def get_user_rooms(user_id) do
+    query =
+      from room_user in RoomUser,
+           select: %{
+             room_id: room_user.room_id,
+             user_ids: array_agg(room_user.user_id)
+           },
+           where: room_user.room_id in subquery(
+            from room_user in RoomUser,
+            select: %{
+              room_id: room_user.room_id
+            },
+            where: room_user.user_id == ^user_id
+           ),
+            group_by: [room_user.room_id]
+    query
+    |> Repo.all
   end
 
   def get_messages(room_id) do
