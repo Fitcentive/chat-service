@@ -25,6 +25,18 @@ defmodule ChatWeb.ChatView do
   end
 
 
+  def render("show_most_recent_room_messages.json", %{most_recent_room_messages: most_recent_room_messages}) do
+    render_many(most_recent_room_messages, ChatView, "show_most_recent_room_message.json", as: :most_recent_room_message)
+  end
+
+  def render("show_most_recent_room_message.json", %{most_recent_room_message: most_recent_room_message}) do
+    %{
+      room_id: most_recent_room_message.room_id,
+      most_recent_message: most_recent_room_message.most_recent_message,
+    }
+  end
+
+
 
   def render("show_messages.json", %{messages: messages}) do
     render_many(messages, ChatView, "show_message.json", as: :message)

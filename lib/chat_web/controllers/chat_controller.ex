@@ -34,6 +34,16 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def get_most_recent_room_messages(conn, %{"room_ids" => room_ids}) when is_list(room_ids) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with bodyguard_results <- room_ids |> Enum.map(fn room_id -> Bodyguard.permit(Chats, :get_room_messages, user_id, room_id) end),
+         true <- Enum.all?(bodyguard_results, &match?(:ok, &1)),
+         most_recent_room_messages <- Chats.most_recent_room_messages(room_ids) do
+      render(conn, "show_most_recent_room_messages.json", most_recent_room_messages: most_recent_room_messages)
+    end
+  end
+
   def get_room_messages(conn,  %{"room_id" => room_id}) do
     user_id = conn.assigns[:claims]["user_id"]
 

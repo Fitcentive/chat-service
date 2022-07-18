@@ -12,7 +12,7 @@ defmodule ChatWeb.Endpoint do
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
 
-  socket "/socket", ChatWeb.UserSocket,
+  socket "/api/chat/socket", ChatWeb.UserSocket,
          websocket: [
            timeout: 300_000
          ],

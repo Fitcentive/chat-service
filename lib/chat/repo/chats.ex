@@ -27,6 +27,10 @@ defmodule Chat.Repo.Chats do
     quote do: fragment("array_agg(?)", unquote(field))
   end
 
+  defmacro array_agg_most_recent(field) do
+    quote do: fragment("(array_agg(? order by created_at desc))[1]", unquote(field))
+  end
+
   #----------------------------------------------------------------------------
 
   defp room_changeset(room_params) do
@@ -126,6 +130,19 @@ defmodule Chat.Repo.Chats do
         "image_url" => image_url
       })
     end
+  end
+
+  def most_recent_room_messages(room_ids) do
+    query =
+      from message in Message,
+           select: %{
+             room_id: message.room_id,
+             most_recent_message: array_agg_most_recent(message.text)
+           },
+           where: message.room_id in ^room_ids,
+           group_by: [message.room_id]
+    query
+    |> Repo.all
   end
 
   def get_user_rooms(user_id) do

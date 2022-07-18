@@ -26,4 +26,11 @@ defmodule ChatWeb.FallbackController do
     |> put_view(ChatWeb.ErrorView)
     |> render(:"403")
   end
+
+  def call(conn, false) do
+    conn
+    |> put_status(:forbidden)
+    |> put_view(ChatWeb.ErrorView)
+    |> render(:"403")
+  end
 end
