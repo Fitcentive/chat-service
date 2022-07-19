@@ -4,6 +4,8 @@ defmodule Chat.Schema.MessageMetadata do
 
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "message_metadata" do
     field :message_id, Ecto.UUID
@@ -16,9 +18,8 @@ defmodule Chat.Schema.MessageMetadata do
   end
 
   def changeset(message_metadata, params \\ %{}) do
-    time =
-      NaiveDateTime.utc_now()
-      |> NaiveDateTime.truncate(:second)
+    time = DateTime.utc_now()
+           |> DateTime.truncate(:second)
 
     message_metadata
     |> cast(params, [:message_id, :image_url])

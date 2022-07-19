@@ -4,6 +4,8 @@ defmodule Chat.Schema.RoomUser do
 
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   @primary_key false
   schema "room_user" do
     field :room_id, Ecto.UUID, primary_key: true
@@ -20,9 +22,8 @@ defmodule Chat.Schema.RoomUser do
   end
 
   def changeset(room_user, params \\ %{}) do
-    time =
-      NaiveDateTime.utc_now()
-      |> NaiveDateTime.truncate(:second)
+    time = DateTime.utc_now()
+           |> DateTime.truncate(:second)
 
     #  Not validating the column 'value' to allow empty strings to be stored as Attribute Values
     #  Ecto validate_required/3 throw errors and remove the column when an empty string

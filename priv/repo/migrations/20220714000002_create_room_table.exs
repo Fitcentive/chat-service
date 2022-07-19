@@ -8,7 +8,7 @@ defmodule Chat.Repo.Migrations.CreateRoomTable do
       add :name, :string
       add :type, :string
 
-      timestamps(inserted_at: :created_at)
+      timestamps([inserted_at: :created_at, type: :utc_datetime])
     end
 
   end

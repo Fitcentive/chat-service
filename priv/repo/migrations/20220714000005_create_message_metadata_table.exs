@@ -8,7 +8,7 @@ defmodule Chat.Repo.Migrations.CreateMessageMetadataTable do
       add :message_id, references(:message, column: :id, on_delete: :delete_all, type: :uuid), null: false
       add :image_url, :string
 
-      timestamps(inserted_at: :created_at)
+      timestamps([inserted_at: :created_at, type: :utc_datetime])
     end
 
   end

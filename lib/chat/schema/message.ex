@@ -4,6 +4,8 @@ defmodule Chat.Schema.Message do
 
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "message" do
@@ -24,9 +26,8 @@ defmodule Chat.Schema.Message do
   end
 
   def changeset(message, params \\ %{}) do
-    time =
-      NaiveDateTime.utc_now()
-      |> NaiveDateTime.truncate(:second)
+    time = DateTime.utc_now()
+           |> DateTime.truncate(:second)
 
     #  Not validating the column 'value' to allow empty strings to be stored as Attribute Values
     #  Ecto validate_required/3 throw errors and remove the column when an empty string

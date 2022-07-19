@@ -4,6 +4,8 @@ defmodule Chat.Schema.User do
 
   import Ecto.Changeset
 
+  @timestamps_opts [type: :utc_datetime]
+
   @primary_key {:id, :binary_id, autogenerate: false}
   @foreign_key_type :binary_id
   schema "user" do
@@ -15,9 +17,8 @@ defmodule Chat.Schema.User do
   end
 
   def changeset(user, params \\ %{}) do
-    time =
-      NaiveDateTime.utc_now()
-      |> NaiveDateTime.truncate(:second)
+    time = DateTime.utc_now()
+           |> DateTime.truncate(:second)
 
     user
     |> cast(params, [:id, :first_name, :last_name, :is_active])

@@ -9,7 +9,7 @@ defmodule Chat.Repo.Migrations.CreateUserTable do
       add :last_name, :string
       add :is_active, :boolean
 
-      timestamps(inserted_at: :created_at)
+      timestamps([inserted_at: :created_at, type: :utc_datetime])
     end
 
   end
