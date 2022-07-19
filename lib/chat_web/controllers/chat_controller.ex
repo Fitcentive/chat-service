@@ -22,7 +22,7 @@ defmodule ChatWeb.ChatController do
     first_name = conn.assigns[:claims]["given_name"]
     last_name = conn.assigns[:claims]["family_name"]
 
-    with _ <- Chats.upsert_user(%{id: userId, first_name: first_name, last_name: last_name, is_active: false}) do
+    with _ <- Chats.upsert_user(%{id: user_id, first_name: first_name, last_name: last_name, is_active: false}) do
       send_resp(conn, :ok)
     end
   end
