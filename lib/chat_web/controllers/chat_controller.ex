@@ -17,6 +17,16 @@ defmodule ChatWeb.ChatController do
     send_resp(conn, :ok, "Server is alive!")
   end
 
+  def upsert_user(conn, _params) do
+    user_id = conn.assigns[:claims]["user_id"]
+    first_name = conn.assigns[:claims]["given_name"]
+    last_name = conn.assigns[:claims]["family_name"]
+
+    with _ <- Chats.upsert_user(%{id: userId, first_name: first_name, last_name: last_name, is_active: false}) do
+      send_resp(conn, :ok)
+    end
+  end
+
   # todo - this has to be guarded to ensure that unauthorized user does not target user
   #        need to make API call to social service to ensure they are connected
   def get_chat_room(conn, %{"target_user" => target_user}) do
