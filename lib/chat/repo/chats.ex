@@ -21,6 +21,17 @@ defmodule Chat.Repo.Chats do
     end
   end
 
+  def authorize(:check_if_users_exist, user_id, target_user) do
+    case Chats.get_user_if_exists(user_id) do
+      nil -> :error
+      _   ->
+        case Chats.get_user_if_exists(target_user) do
+          nil -> :error
+          _   -> :ok
+        end
+    end
+  end
+
   #----------------------------------------------------------------------------
 
   defmacro array_agg(field) do
@@ -196,6 +207,16 @@ defmodule Chat.Repo.Chats do
   query
     |> Repo.one
 
+  end
+
+  def get_user_if_exists(user_id) do
+    query =
+      from user in User,
+      select: user,
+      where: user.id == ^user_id
+
+    query
+      |> Repo.one
   end
 
 end

@@ -37,7 +37,8 @@ defmodule ChatWeb.ChatController do
     room_id = UUID.uuid5(:nil, room_name)
     new_room = %{id: room_id, name: room_name, type: "private"}
 
-    with room <- Chats.upsert_room(new_room),
+    with :ok <- Bodyguard.permit(Chats, :check_if_users_exist, user_id, target_user),
+        room <- Chats.upsert_room(new_room),
          _ <- Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => user_id}),
          _ <- Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => target_user}) do
       render(conn, "show_room.json", room: room)
