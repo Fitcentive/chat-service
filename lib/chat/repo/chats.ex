@@ -132,6 +132,7 @@ defmodule Chat.Repo.Chats do
     end
   end
 
+  # todo - merge this with user rooms to save API call
   def most_recent_room_messages(room_ids) do
     query =
       from message in Message,
@@ -179,6 +180,7 @@ defmodule Chat.Repo.Chats do
           image_url: message_metadata.image_url,
         },
         where: message.room_id == ^room_id,
+        order_by: [desc: message.created_at],
         distinct: true
 
     query
