@@ -1,19 +1,30 @@
 defmodule ChatWeb.ChatRoomChannel do
   use ChatWeb, :channel
+  alias ChatWeb.Presence
 
   import Chat.Repo.Chats
   alias Chat.Repo.Chats
+  alias ChatWeb.GcpPubSubClient
 
-  # todo - Use Phoenix.presence to track user active status
   @impl true
   def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
     if authorized?(room_id, user_id, socket) do
+      send(self(), :after_join)
       {:ok, assign(socket, :room_id, room_id)}
     else
       {:error, %{reason: "unauthorized"}}
     end
   end
 
+  @impl true
+  def handle_info(:after_join, socket) do
+    {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
+      online_at: inspect(System.system_time(:second))
+    })
+
+    push(socket, "presence_state", Presence.list(socket))
+    {:noreply, socket}
+  end
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
@@ -50,6 +61,15 @@ defmodule ChatWeb.ChatRoomChannel do
       "text" => text,
     }) do
       broadcast(socket, "shout", payload)
+      # Send notification to other users if they are not already online
+      room_users = Chats.get_users_for_room(room_id)
+      room_user_ids = Enum.map(room_users.user_ids, &(UUID.binary_to_string!(&1)))
+      online_users = Presence.list(socket) |> Map.keys
+      offline_users = ((room_user_ids -- online_users) -- [user_id])
+
+      offline_users
+      |> Enum.map(&(GcpPubSubClient.publish_chat_room_message_sent(user_id, &1, room_id)))
+      #####
       {:noreply, socket}
     end
   end
@@ -64,7 +84,5 @@ defmodule ChatWeb.ChatRoomChannel do
       false
     end
   end
-
-
 
 end

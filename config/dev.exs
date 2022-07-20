@@ -75,3 +75,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :goth,
+       json: Path.join(Path.dirname(__DIR__), "priv/credentials/fitcentive-1210-4f3121258c62.json") |> File.read!

@@ -101,4 +101,14 @@ if config_env() == :prod do
        iss: System.get_env("GOOGLE_AUTH_ISSUER")
      },
     }
+
+  config :goth,
+    json: {:system, "GCP_CREDENTIALS"}
+
+  config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
+    topics: %{
+     chat_room_message_sent: System.get_env("TOPIC_CHAT_ROOM_MESSAGE_SENT")
+    }
+
+
 end

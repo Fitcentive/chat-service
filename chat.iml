@@ -58,6 +58,14 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/poison" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/elixir_uuid" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/bodyguard" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/hpax" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/nimble_options" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/nimble_pool" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/kane" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/mint" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/httpoison" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/goth" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/finch" />
     </content>
     <orderEntry type="jdk" jdkName="Elixir 1.13.4" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -138,5 +146,15 @@
     <orderEntry type="library" name="benchfella" level="project" />
     <orderEntry type="library" name="bodyguard" level="project" />
     <orderEntry type="library" name="mix_test_watch" level="project" />
+    <orderEntry type="library" name="kane" level="project" />
+    <orderEntry type="library" name="goth" level="project" />
+    <orderEntry type="library" name="httpoison" level="project" />
+    <orderEntry type="library" name="uuid" level="project" />
+    <orderEntry type="library" name="hpax" level="project" />
+    <orderEntry type="library" name="nimble_pool" level="project" />
+    <orderEntry type="library" name="nimble_options" level="project" />
+    <orderEntry type="library" name="mimic" level="project" />
+    <orderEntry type="library" name="httparrot" level="project" />
+    <orderEntry type="library" name="hpack" level="project" />
   </component>
 </module>

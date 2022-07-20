@@ -232,4 +232,18 @@ defmodule Chat.Repo.Chats do
       |> Repo.one
   end
 
+  def get_users_for_room(room_id) do
+    query =
+      from room_user in RoomUser,
+      select: %{
+         room_id: room_user.room_id,
+         user_ids: array_agg(room_user.user_id),
+       },
+      where: room_user.room_id == ^room_id,
+      group_by: room_user.room_id
+
+    query
+     |> Repo.one
+  end
+
 end

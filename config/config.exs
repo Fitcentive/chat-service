@@ -73,3 +73,7 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
    },
   }
 
+config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
+  topics: %{
+    chat_room_message_sent: "chat-room-message-sent"
+  }

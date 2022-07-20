@@ -20,7 +20,7 @@ defmodule Chat.MixProject do
   def application do
     [
       mod: {Chat.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :kane]
     ]
   end
 
@@ -54,6 +54,7 @@ defmodule Chat.MixProject do
       {:poison, "~> 5.0"},
       {:elixir_uuid, "~> 1.2" },
       {:bodyguard, "~> 2.4"},
+      {:kane, "~> 0.9.0"},
     ]
   end
 
