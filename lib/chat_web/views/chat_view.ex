@@ -9,7 +9,7 @@ defmodule ChatWeb.ChatView do
 
   def render("show_room_with_users.json", %{room_with_users: room_with_users}) do
     %{
-      room_id: room_with_users.room_id,
+      room_id: UUID.binary_to_string!(room_with_users.room_id),
       user_ids: Enum.map(room_with_users.user_ids, &(UUID.binary_to_string!(&1))),
     }
   end

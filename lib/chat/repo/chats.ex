@@ -158,22 +158,35 @@ defmodule Chat.Repo.Chats do
   end
 
   def get_user_rooms(user_id) do
-    query =
+    cte_query =
       from room_user in RoomUser,
-           select: %{
-             room_id: room_user.room_id,
-             user_ids: array_agg(room_user.user_id)
-           },
-           where: room_user.room_id in subquery(
-            from room_user in RoomUser,
-            select: %{
-              room_id: room_user.room_id
-            },
-            where: room_user.user_id == ^user_id
-           ),
-            group_by: [room_user.room_id]
-    query
-    |> Repo.all
+      left_join: message in Message,
+      on: room_user.room_id == message.room_id,
+      select: %{
+                room_id: room_user.room_id,
+                user_id: room_user.user_id,
+                most_recent_message_time: max(message.created_at),
+      },
+      where: room_user.room_id in subquery(
+        from room_user in RoomUser,
+        select: %{
+          room_id: room_user.room_id
+        },
+        where: room_user.user_id == ^user_id
+      ),
+      group_by: [room_user.room_id, room_user.user_id]
+
+    result = "t1"
+      |> with_cte("t1", as: ^cte_query)
+      |> select([row], %{
+          room_id: row.room_id,
+          user_ids: array_agg(row.user_id),
+          most_recent_message_time: max(row.most_recent_message_time)
+        })
+      |> group_by([row], [row.room_id, row.most_recent_message_time])
+      |> order_by([row], [desc: row.most_recent_message_time])
+      |> Repo.all
+
   end
 
   def get_messages(room_id) do
