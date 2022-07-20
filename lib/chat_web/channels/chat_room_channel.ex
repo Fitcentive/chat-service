@@ -68,7 +68,7 @@ defmodule ChatWeb.ChatRoomChannel do
       offline_users = ((room_user_ids -- online_users) -- [user_id])
 
       offline_users
-      |> Enum.map(&(GcpPubSubClient.publish_chat_room_message_sent(user_id, &1, room_id)))
+      |> Enum.map(&(GcpPubSubClient.publish_chat_room_message_sent(user_id, &1, room_id, text)))
       #####
       {:noreply, socket}
     end

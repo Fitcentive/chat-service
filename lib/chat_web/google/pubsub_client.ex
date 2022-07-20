@@ -15,7 +15,7 @@ defmodule ChatWeb.GcpPubSubClient do
   end
 
 
-  def publish_chat_room_message_sent(sending_user, target_user, room_id) do
+  def publish_chat_room_message_sent(sending_user, target_user, room_id, message) do
     # todo - dont read this each time
     pubsub_topics = ChatWeb.GcpPubSubClient.pubsub_config
     topic = %Kane.Topic{name: pubsub_topics[:chat_room_message_sent]}
@@ -26,7 +26,8 @@ defmodule ChatWeb.GcpPubSubClient do
         payload: %{
           "sendingUser": sending_user,
           "targetUser": target_user,
-          "roomId": room_id
+          "roomId": room_id,
+          "message": message
         }
       }
     }
