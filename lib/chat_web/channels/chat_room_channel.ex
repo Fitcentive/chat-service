@@ -46,7 +46,7 @@ defmodule ChatWeb.ChatRoomChannel do
   def handle_in("typing_stopped", _payload, socket) do
     room_id = socket.assigns[:room_id]
     user_id = socket.assigns[:user_id]
-    broadcast(socket, "typing_started", %{"user_id" => user_id})
+    broadcast(socket, "typing_stopped", %{"user_id" => user_id})
     {:noreply, socket}
   end
 
