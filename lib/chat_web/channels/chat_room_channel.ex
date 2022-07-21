@@ -5,6 +5,7 @@ defmodule ChatWeb.ChatRoomChannel do
   import Chat.Repo.Chats
   alias Chat.Repo.Chats
   alias ChatWeb.GcpPubSubClient
+  alias ChatWeb.ChatRoomChannel
 
   @impl true
   def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
@@ -33,6 +34,22 @@ defmodule ChatWeb.ChatRoomChannel do
     {:reply, {:ok, payload}, socket}
   end
 
+  @impl true
+  def handle_in("typing_started", _payload, socket) do
+    room_id = socket.assigns[:room_id]
+    user_id = socket.assigns[:user_id]
+    broadcast(socket, "typing_started", %{"user_id" => user_id})
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_in("typing_stopped", _payload, socket) do
+    room_id = socket.assigns[:room_id]
+    user_id = socket.assigns[:user_id]
+    broadcast(socket, "typing_started", %{"user_id" => user_id})
+    {:noreply, socket}
+  end
+
 
   @impl true
   def handle_in("shout", %{"body" => text, "image_url" => image_url} = payload, socket) do
@@ -45,6 +62,7 @@ defmodule ChatWeb.ChatRoomChannel do
       "image_url" => image_url,
     }) do
       broadcast(socket, "shout", payload)
+      send_push_notifications_to_offline_users(socket, room_id, user_id, text)
       {:noreply, socket}
     end
   end
@@ -61,17 +79,21 @@ defmodule ChatWeb.ChatRoomChannel do
       "text" => text,
     }) do
       broadcast(socket, "shout", payload)
-      # Send notification to other users if they are not already online
-      room_users = Chats.get_users_for_room(room_id)
-      room_user_ids = Enum.map(room_users.user_ids, &(UUID.binary_to_string!(&1)))
-      online_users = Presence.list(socket) |> Map.keys
-      offline_users = ((room_user_ids -- online_users) -- [user_id])
-
-      offline_users
-      |> Enum.map(&(GcpPubSubClient.publish_chat_room_message_sent(user_id, &1, room_id, text)))
-      #####
+      send_push_notifications_to_offline_users(socket, room_id, user_id, text)
       {:noreply, socket}
     end
+  end
+
+  defp send_push_notifications_to_offline_users(socket, room_id, user_id, text) do
+    # Send notification to other users if they are not already online
+    room_users = Chats.get_users_for_room(room_id)
+    room_user_ids = Enum.map(room_users.user_ids, &(UUID.binary_to_string!(&1)))
+    online_users = Presence.list(socket) |> Map.keys
+    offline_users = ((room_user_ids -- online_users) -- [user_id])
+
+    offline_users
+    |> Enum.map(&(GcpPubSubClient.publish_chat_room_message_sent(user_id, &1, room_id, text)))
+    #####
   end
 
   defp authorized?(room_id, user_id, socket) do
