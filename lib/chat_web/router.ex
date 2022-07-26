@@ -11,6 +11,7 @@ defmodule ChatWeb.Router do
   end
 
   pipeline :api do
+    plug CORSPlug, origin: ["http://localhost:5555"]
     plug :accepts, ["json"]
 
   end

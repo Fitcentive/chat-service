@@ -20,6 +20,7 @@ defmodule ChatWeb.Endpoint do
          check_origin: [
            "http://api.vid.app",
            "//localhost:4000",
+           "//localhost:5555",
            "//*.other.com"
          ]
 
