@@ -61,6 +61,9 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    check_origin: [
+      "http://localhost:5555",
+    ],
     secret_key_base: secret_key_base
 
   # ## Configuring the mailer

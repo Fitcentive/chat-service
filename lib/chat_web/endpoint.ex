@@ -21,6 +21,7 @@ defmodule ChatWeb.Endpoint do
            "http://api.vid.app",
            "//localhost:4000",
            "//localhost:5555",
+           "http://localhost:5555",
            "//*.other.com"
          ]
 
