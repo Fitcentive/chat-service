@@ -189,7 +189,7 @@ defmodule Chat.Repo.Chats do
 
   end
 
-  def get_messages(room_id) do
+  def get_messages(room_id, sent_before, _limit) do
     query =
       from message in Message,
         left_join: message_metadata in MessageMetadata,
@@ -203,10 +203,10 @@ defmodule Chat.Repo.Chats do
           updated_at: message.updated_at,
           image_url: message_metadata.image_url,
         },
-        where: message.room_id == ^room_id,
+        where: message.room_id == ^room_id and message.created_at < ^sent_before,
         order_by: [desc: message.created_at],
-        distinct: true
-
+        distinct: true,
+        limit: ^_limit
     query
     |> Repo.all
   end

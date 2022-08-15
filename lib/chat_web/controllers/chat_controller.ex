@@ -55,11 +55,17 @@ defmodule ChatWeb.ChatController do
     end
   end
 
-  def get_room_messages(conn,  %{"room_id" => room_id}) do
+  def get_room_messages(conn,  params = %{"room_id" => room_id}) do
+    now = Integer.to_string(DateTime.utc_now |> DateTime.to_unix(:millisecond))
+
     user_id = conn.assigns[:claims]["user_id"]
+    sent_before = Map.get(params, "sent_before", now)
+    limit = Map.get(params, "limit", 50)
+    {unix_timestamp, _} = Integer.parse(sent_before)
+    {:ok, sent_before_param} = DateTime.from_unix(unix_timestamp, :millisecond)
 
     with :ok <- Bodyguard.permit(Chats, :get_room_messages, user_id, room_id),
-    messages <- Chats.get_messages(room_id) do
+         messages <- Chats.get_messages(room_id, sent_before_param, limit) do
       render(conn, "show_messages.json", messages: messages)
     end
   end
@@ -72,5 +78,15 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  defp datetime_to_epoch_milliseconds(datetime) do
+    datetime
+    |> Ecto.DateTime.to_erl
+    |> :calendar.datetime_to_gregorian_seconds
+    |> Kernel.-(62167219200)
+    |> Kernel.*(1000000)
+    |> Kernel.+(datetime.usec)
+    |> div(1000)
+    |> IO.inspect
+  end
 
 end
