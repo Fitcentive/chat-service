@@ -27,6 +27,12 @@ defmodule ChatWeb.ChatRoomChannel do
     {:noreply, socket}
   end
 
+  # Heartbeat
+  @impl true
+  def handle_in("heartbeat", _payload, socket) do
+    {:noreply, socket}
+  end
+
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
   @impl true
