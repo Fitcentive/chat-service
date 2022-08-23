@@ -80,6 +80,15 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
       """,
       iss: "https://api.vid.app/auth/realms/AppleAuth"
     },
+
+    "ReWncxo8lc4oy53iYaYGqXmoPbQByWTMrvGp98jKshE" => %{
+      public_key: """
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAluPfaSgKazjCS10NXvcLIKqJrS5gbtMc2QSCQWhISB0wQ/znd11MAmVsWYNuqR7ZYt5zhFevhvx49GlTV8jo814ZOIDwqpSkl+AB0l/hOEAFuEQhAmTKAajyA8tug65N9WXv2deiHmIM6uHJj0lLt1WIMF4slRu2WueLE/KeOCrtDLOytilyipcZWyT9t3EJVHKIIrTVTQePm5BhpaV627X8oOi8unh6caUodJGHJ5i44lit7jgQd02D+fWLg4AAZXTYTjeG3KGAy92bJWfE2xVszQXzakQPzaS12dFEuUWIQoUGKKOs2pVK4g/PXtFxNBrnH3CYbVTC9QLGLlFA4wIDAQAB
+      -----END PUBLIC KEY-----
+      """,
+      iss: "https://api.vid.app/auth/realms/FacebookAuth"
+    },
   }
 
 config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,

@@ -104,14 +104,23 @@ if config_env() == :prod do
        iss: System.get_env("GOOGLE_AUTH_ISSUER")
      },
 
-      System.get_env("APPLE_AUTH_KEY_ID") => %{
-        public_key: """
-        -----BEGIN PUBLIC KEY-----
-        #{System.get_env("APPLE_AUTH_PUBLIC_KEY")}
-        -----END PUBLIC KEY-----
-        """,
-        iss: System.get_env("APPLE_AUTH_ISSUER")
-      },
+     System.get_env("APPLE_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("APPLE_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("APPLE_AUTH_ISSUER")
+     },
+
+     System.get_env("FACEBOOK_AUTH_KEY_ID") => %{
+       public_key: """
+       -----BEGIN PUBLIC KEY-----
+       #{System.get_env("FACEBOOK_AUTH_PUBLIC_KEY")}
+       -----END PUBLIC KEY-----
+       """,
+       iss: System.get_env("FACEBOOK_AUTH_ISSUER")
+     },
     }
 
   config :goth,
