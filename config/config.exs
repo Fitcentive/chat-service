@@ -60,7 +60,7 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB
      -----END PUBLIC KEY-----
      """,
-     iss: "http://api.vid.app/auth/realms/GoogleAuth"
+     iss: "https://api.vid.app/auth/realms/GoogleAuth"
    },
 
    "Dhb5KyQiZHEBLrAhiYltrBLEamD4nnh61eFM4FsnGO0" => %{
@@ -69,8 +69,17 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
      -----END PUBLIC KEY-----
      """,
-     iss: "http://api.vid.app/auth/realms/NativeAuth"
+     iss: "https://api.vid.app/auth/realms/NativeAuth"
    },
+
+    "qdczNS1H48MCBJ7QD0dhnv_o_BikgoN4U79--nQmxT0" => %{
+      public_key: """
+      -----BEGIN PUBLIC KEY-----
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmVDJ4ZXPO09a6eHHWmke2TbBzvsLZIy7dITsJIxu3eYK5oNPF4hVZzP75AMbtSiMuHKIiEji7CulZmd7pu25nUidKNVYB4Kh66kaWsiJ6z7iqTz6Xajc25AdOiQTCk6aE8HqVKSXNULhC53ZF7uMKApEdlvEDPubpUmj/FR8oIBPwmoyovW3JUhydqcMxyplBemrwxPw9SCJhbOaBJtShiyJ+q5xQL23gltweUiVHT6UT2EkNNQpS1uBCeLNguVSEUGFDw4YYTFkKiMBEjhjfHYdeAx5dmq5hVCf2ECphIxeKrb6z3+xz5iRW4yvr7s2ix+dvnybaf11186qLHARSwIDAQAB
+      -----END PUBLIC KEY-----
+      """,
+      iss: "https://api.vid.app/auth/realms/AppleAuth"
+    },
   }
 
 config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
