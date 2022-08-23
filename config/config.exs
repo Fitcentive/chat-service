@@ -81,10 +81,10 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
       iss: "https://api.vid.app/auth/realms/AppleAuth"
     },
 
-    "ReWncxo8lc4oy53iYaYGqXmoPbQByWTMrvGp98jKshE" => %{
+    "e28-PLM8vJ6rBS8TDTNH5UOCgi5mql2MBIl88Fk_F6o" => %{
       public_key: """
       -----BEGIN PUBLIC KEY-----
-      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAluPfaSgKazjCS10NXvcLIKqJrS5gbtMc2QSCQWhISB0wQ/znd11MAmVsWYNuqR7ZYt5zhFevhvx49GlTV8jo814ZOIDwqpSkl+AB0l/hOEAFuEQhAmTKAajyA8tug65N9WXv2deiHmIM6uHJj0lLt1WIMF4slRu2WueLE/KeOCrtDLOytilyipcZWyT9t3EJVHKIIrTVTQePm5BhpaV627X8oOi8unh6caUodJGHJ5i44lit7jgQd02D+fWLg4AAZXTYTjeG3KGAy92bJWfE2xVszQXzakQPzaS12dFEuUWIQoUGKKOs2pVK4g/PXtFxNBrnH3CYbVTC9QLGLlFA4wIDAQAB
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA28RGo7/MXNpJTNhOybAM85vXFwb6imoHrnbEr9t0egzJhR4GSLMCQUozQ+K1FruZ+LHnHzMMkZFUnz1veaXaAV9Vxum3iuoD1hGHjRtADzNuLqoclj3XgCH9EkbXzI9MvFK83M6pAa6Udt3kpHrIxL4nt5Tk6H12PkpV9x4vPcGOfdT2UTiDdpnT2RW0+IiuG52/hkBSTg4Kew/FU/5mNcGI8fKh2wnHIWdVZY+PfXMPIZ+eKw4QLprk+fKXZ7cKcKK+zHZJNbxNkR1E+pjduPY5+kyagjEW/oO/NU5CEOdW8jabjzRILBDaZRvNjvDiK1Rf3SfhFn9lXJxDZHZ4OQIDAQAB
       -----END PUBLIC KEY-----
       """,
       iss: "https://api.vid.app/auth/realms/FacebookAuth"
