@@ -27,8 +27,6 @@ defmodule ChatWeb.ChatController do
     end
   end
 
-  # todo - this has to be guarded to ensure that unauthorized user does not target user
-  #        need to make API call to social service to ensure they are connected
   def get_chat_room(conn, %{"target_user" => target_user}) do
     user_id = conn.assigns[:claims]["user_id"]
     room_name = [user_id, target_user]

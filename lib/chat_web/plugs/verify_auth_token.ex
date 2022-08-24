@@ -24,29 +24,32 @@ defmodule ChatWeb.Plugs.VerifyAuthToken do
   """
   @spec call(Plug.Conn.t(), keyword()) :: Plug.Conn.t()
   def call(conn, _) do
-    token =
-      conn
-      |> get_req_header("authorization")
-      |> fetch_token()
+    token = conn
+            |> get_req_header("authorization")
+            |> fetch_token()
 
-      # todo - no token returns 500 instead of 401
-    [{:ok, rawHeader} | rest ] = token
-      |> String.split(".")
-      |> Enum.map(&(Base.decode64(&1, padding: false)))
+    case token do
+      nil ->
+        send_401(conn)
+      _   ->
+        [{:ok, rawHeader} | rest ] = token
+                                     |> String.split(".")
+                                     |> Enum.map(&(Base.decode64(&1, padding: false)))
 
-    %{"kid" => key_id} = Poison.decode!(rawHeader)
+        %{"kid" => key_id} = Poison.decode!(rawHeader)
 
-    case verify_token(token, key_id) do
-      {:ok, claims} ->
-        conn
-        |> assign(:claims, claims)
-
-      {:error, message} ->
-        conn
-        |> put_resp_content_type("application/json")
-        |> send_resp(401, Poison.encode!(%{error: "Invalid token"}))
-        |> halt()
+        case verify_token(token, key_id) do
+          {:ok, claims}     -> assign(conn, :claims, claims)
+          {:error, message} -> send_401(conn)
+        end
     end
+  end
+
+  defp send_401(conn) do
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(401, Poison.encode!(%{error: "Invalid token"}))
+    |> halt()
   end
 
 
