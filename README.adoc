@@ -1,0 +1,87 @@
+= Chat
+
+== Description
+A reactive/rest microservice to handle live user chat and persist historical chat information
+
+== Pre-requisites
+1. Elixir/Mix/Phoenix
+2. Postgres
+
+== Running service locally
+1. This service also requires access to a postgres database
+- Database should be running on `localhost:1212` with `username: postgres` and `password: postgres`
+2. This service also needs internet access to connect to Google Pub/Sub APIs
+
+To start your Phoenix server:
+
+* Install dependencies with `mix deps.get`
+* Create and migrate your database with `mix ecto.setup`
+* Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+* Now you can visit http://localhost:4000[`localhost:4000`] from your browser.
+* `curl http://localhost:4000/api/chat/health` to bootstrap the server
+
+
+== Deploy to minikube cluster
+
+'''
+
+=== Pre-requisites
+Note - these pre-requisites need only be done **once ever**. If you are deploying another service and you have already completed these steps, no need to repeat them (but follow steps that weren't executed before)
+
+==== 1. Start a single node `minikube` cluter with enough resources
+1. `minikube -p=hyperkit --memory 8192 --cpus 8 start`
+2.  **Note** - use the `hyperkit` driver otherwise TLS will not work
+
+==== 2. Enable TLS on minikube cluster
+1. `mkcert "*.vid.app"`
+2. `kubectl -n kube-system create secret tls mkcert --key key.pem --cert cert.pem`
+3. `minikube addons configure ingress`
+4. Verify that certificate was enabled
+- `kubectl -n ingress-nginx get deployment ingress-nginx-controller -o yaml | grep "kube-system"`
+5. For a comprehensive set of instructions, https://minikube.sigs.k8s.io/docs/tutorials/custom_cert_ingress/[refer to the minikube docs]
+
+==== 3. Add DNS entry to local hosts file
+1. `sudo vi /etc/hosts`
+2. Add the following entry to the file below `127.0.0.1     localhost`
+- `192.168.64.3 api.vid.app`
+
+==== 4. Add database ssh tunnel
+1. `ssh -i $(minikube -p=hyperkit ssh-key) docker@$(minikube -p=hyperkit ip) -R 1211:localhost:1211 -R 1212:localhost:1212 -R 1210:localhost:1210 -R 1213:localhost:1213`
+2. Note - Only `localhost:1212` is needed for this service, but other services' tunnels can be bundled into this one command
+
+'''
+
+=== 1. Delete existing deployment and build fresh image
+1. `kubectl delete deployment/chat-service`
+2. `docker image ls | grep chat`
+3. `docker image rm chat`
+4. `docker image rm <image_hash>`
+5. `docker build -t chat:latest -t chat:1.0 .`
+
+
+=== 2. Deploy manifests to minikube
+1. Ensure you are on the right `kubectl` context
+2. `cd deployment`
+3. `kubectl apply -f minikube/`
+
+=== 3. Verify working of server
+1. `curl http://api.vid.app/api/chat/healthz`
+- Should return a `200` with response `Server is alive!`
+
+
+==== Note
+1. The generated SSL certificate might need explicit trusting by you on your browser for the first time
+2. For the certificate to be accepted on Android or iOS devices, you have to import the certificate into the device and trust it manually
+- For Android or iOS, copy the `rootCA.pem` or `rootCA.der` file generated in step 1 into the device filesystem. Then, follow device specific instructions to trust the certificate
+- One might require conversion of `.pem` to `.der` or vice versa - make sure you use the right format (conversion is easy via a quick search)
+
+== Learn more
+
+* Official website: https://www.phoenixframework.org/
+* Guides: https://hexdocs.pm/phoenix/overview.html
+* Docs: https://hexdocs.pm/phoenix
+* Forum: https://elixirforum.com/c/phoenix-forum
+* Source: https://github.com/phoenixframework/phoenix
+
+Ready to run in production? Please https://hexdocs.pm/phoenix/deployment.html[check our deployment guides].
+
