@@ -53,10 +53,11 @@ Note - these pre-requisites need only be done **once ever**. If you are deployin
 
 === 1. Delete existing deployment and build fresh image
 1. `kubectl delete deployment/chat-service`
-2. `docker image ls | grep chat`
-3. `docker image rm chat`
-4. `docker image rm <image_hash>`
-5. `docker build -t chat:latest -t chat:1.0 .`
+2. `eval $(minikube --profile=hyperkit docker-env)`
+3. `docker image ls | grep chat`
+4. `docker image rm chat`
+5. `docker image rm <image_hash>`
+6. `docker build -t chat:latest -t chat:1.0 .`
 
 
 === 2. Deploy manifests to minikube
