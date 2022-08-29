@@ -76,6 +76,10 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def delete_user_data(conn, params) do
+    send_resp(conn, :ok, "Success")
+  end
+
   defp datetime_to_epoch_milliseconds(datetime) do
     datetime
     |> Ecto.DateTime.to_erl

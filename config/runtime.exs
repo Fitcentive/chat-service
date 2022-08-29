@@ -84,6 +84,9 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
+  config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
+    secret: System.get_env("INTERNAL_SERVICE_SECRET")
+
   config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
     keyIdPublicKeys: %{
      System.get_env("NATIVE_AUTH_KEY_ID") => %{

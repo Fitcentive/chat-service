@@ -52,6 +52,9 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
 
+config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
+  secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
+
 config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
   keyIdPublicKeys: %{
    "ZK_xufw1gGfVqJ-3a4aJM9EzZRfxp1Z6_AH2fCpYvtk" => %{

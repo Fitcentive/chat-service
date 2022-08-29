@@ -20,6 +20,10 @@ defmodule ChatWeb.Router do
     plug ChatWeb.Plugs.VerifyAuthToken
   end
 
+  pipeline :internal_authentication do
+    plug ChatWeb.Plugs.VerifyServiceSecret
+  end
+
   get "/api/chat/health", ChatWeb.ChatController, :server_health
 
   scope "/", ChatWeb do
@@ -41,6 +45,13 @@ defmodule ChatWeb.Router do
 
     get "/user/rooms", ChatController, :get_user_rooms
 
+   end
+
+   scope "/api/internal/chat", ChatWeb do
+    pipe_through :internal_authentication
+    pipe_through :api
+
+    delete "/user/:user_id", ChatController, :delete_user_data
    end
 
   # Enables LiveDashboard only for development

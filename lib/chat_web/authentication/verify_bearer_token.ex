@@ -28,6 +28,17 @@ defmodule ChatWeb.Authentication.VerifyBearerToken do
     Joken.verify_and_validate(verify_token_config(key_id), token, signer_key(key_id))
   end
 
+  def verify_service_secret(secret) do
+    {service_secret, _} = :service_secret
+      |> Application.get_env(__MODULE__, %{})
+      |> Keyword.split([:secret])
+
+    case secret == service_secret[:secret] do
+      true -> :ok
+      _    -> :error
+    end
+  end
+
 
   def signer_key(key_id) do
     {config, _} =
