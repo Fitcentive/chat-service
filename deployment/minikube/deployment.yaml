@@ -43,6 +43,8 @@ spec:
           env:
             - name: INTERNAL_SERVICE_SECRET
               value: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
+            - name: DELETED_USER_ID
+              value: "aaaaaaaa-aaaa-8bbb-8bbb-aaaaaaaaaaaa"
             - name: NATIVE_AUTH_KEY_ID
               value: "Dhb5KyQiZHEBLrAhiYltrBLEamD4nnh61eFM4FsnGO0"
             - name: NATIVE_AUTH_PUBLIC_KEY

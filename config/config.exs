@@ -52,6 +52,9 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
 
+config :deleted_user_id, ChatWeb.ChatController,
+  user_id: "aaaaaaaa-aaaa-8bbb-8bbb-aaaaaaaaaaaa"
+
 config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
   secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
 

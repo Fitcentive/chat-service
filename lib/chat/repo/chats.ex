@@ -246,4 +246,28 @@ defmodule Chat.Repo.Chats do
      |> Repo.one
   end
 
+  def update_room_users([], user_id) do
+    :ok
+  end
+
+  def update_room_users(room_ids, user_id, deleted_user_id) do
+    query =
+      from room_user in RoomUser,
+      where: room_user.room_id in ^room_ids and room_user.user_id == ^user_id,
+      update: [set: [user_id: ^deleted_user_id]]
+
+    query
+      |> Repo.update_all
+  end
+
+  def update_messages(user_id, deleted_user_id) do
+    query =
+      from message in Message,
+      where: message.sender_id == ^user_id,
+      update: [set: [sender_id: ^deleted_user_id]]
+
+    query
+      |> Repo.update_all
+  end
+
 end

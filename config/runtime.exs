@@ -84,6 +84,9 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
+  config :deleted_user_id, ChatWeb.ChatController,
+    user_id: System.get_env("DELETED_USER_ID")
+
   config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
     secret: System.get_env("INTERNAL_SERVICE_SECRET")
 
