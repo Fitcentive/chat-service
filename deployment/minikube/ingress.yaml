@@ -18,3 +18,10 @@ spec:
                 name: chat-service
                 port:
                   number: 4000
+          - path: /api/internal/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-service
+                port:
+                  number: 4000
