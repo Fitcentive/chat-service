@@ -88,8 +88,9 @@ defmodule ChatWeb.ChatController do
     with _ <- Chats.upsert_user(%{id: deleted_user_id, first_name: "Deleted", last_name: "User", is_active: false}),
          user_rooms <- Chats.get_user_rooms(user_id),
          _ <- Chats.update_room_users(user_rooms, user_id, deleted_user_id),
-         _ <- Chats.update_messages(user_id, deleted_user_id) do
-      send_resp(conn, :no_content, "Success")
+         _ <- Chats.update_messages(user_id, deleted_user_id),
+         _ <- Chats.delete_user(user_id) do
+      send_resp(conn, :no_content, "")
     end
 
   end

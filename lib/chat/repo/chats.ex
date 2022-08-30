@@ -270,4 +270,13 @@ defmodule Chat.Repo.Chats do
       |> Repo.update_all([])
   end
 
+  def delete_user(user_id) do
+    query =
+      from user in User,
+      where: user.id == ^user_id
+
+    query
+      |> Repo.delete_all()
+  end
+
 end
