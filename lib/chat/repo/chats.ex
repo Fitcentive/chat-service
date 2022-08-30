@@ -257,7 +257,7 @@ defmodule Chat.Repo.Chats do
       update: [set: [user_id: ^deleted_user_id]]
 
     query
-      |> Repo.update_all
+      |> Repo.update_all([])
   end
 
   def update_messages(user_id, deleted_user_id) do
@@ -267,7 +267,7 @@ defmodule Chat.Repo.Chats do
       update: [set: [sender_id: ^deleted_user_id]]
 
     query
-      |> Repo.update_all
+      |> Repo.update_all([])
   end
 
 end

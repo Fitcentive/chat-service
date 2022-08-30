@@ -77,15 +77,15 @@ defmodule ChatWeb.ChatController do
   end
 
   def delete_user_data(conn, params = %{"user_id" => user_id}) do
-    {deleted_user_id, _} = :deleted_user_id
+    {deleted_user_id_config, _} = :deleted_user_id
                           |> Application.get_env(__MODULE__, %{})
                           |> Keyword.split([:user_id])
-
+    deleted_user_id = deleted_user_id_config[:user_id]
     # Steps to take
     # 1. Upsert deleted user
     # 2. Update room_user table to replace references to user being deleted
     # 3. Update message table to replace references to user being deleted
-    with _ <- Chats.upsert_user(%{id: deleted_user_id[:user_id], first_name: "Deleted", last_name: "User", is_active: false}),
+    with _ <- Chats.upsert_user(%{id: deleted_user_id, first_name: "Deleted", last_name: "User", is_active: false}),
          user_rooms <- Chats.get_user_rooms(user_id),
          _ <- Chats.update_room_users(user_rooms, user_id, deleted_user_id),
          _ <- Chats.update_messages(user_id, deleted_user_id) do
