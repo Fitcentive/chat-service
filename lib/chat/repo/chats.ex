@@ -251,20 +251,24 @@ defmodule Chat.Repo.Chats do
   end
 
   def update_room_users(room_ids, user_id, deleted_user_id) do
+    {:ok, deleted_user_id_uuid} = Ecto.UUID.dump(deleted_user_id)
+    {:ok, user_id_uuid} = Ecto.UUID.dump(user_id)
     query =
       from room_user in RoomUser,
-      where: room_user.room_id in ^room_ids and room_user.user_id == ^user_id,
-      update: [set: [user_id: ^deleted_user_id]]
+      where: room_user.room_id in ^room_ids and room_user.user_id == ^user_id_uuid,
+      update: [set: [user_id: ^deleted_user_id_uuid]]
 
     query
       |> Repo.update_all([])
   end
 
   def update_messages(user_id, deleted_user_id) do
+    {:ok, deleted_user_id_uuid} = Ecto.UUID.dump(deleted_user_id)
+    {:ok, user_id_uuid} = Ecto.UUID.dump(user_id)
     query =
       from message in Message,
       where: message.sender_id == ^user_id,
-      update: [set: [sender_id: ^deleted_user_id]]
+      update: [set: [sender_id: ^deleted_user_id_uuid]]
 
     query
       |> Repo.update_all([])

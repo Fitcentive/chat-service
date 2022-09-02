@@ -87,7 +87,8 @@ defmodule ChatWeb.ChatController do
     # 3. Update message table to replace references to user being deleted
     with _ <- Chats.upsert_user(%{id: deleted_user_id, first_name: "Deleted", last_name: "User", is_active: false}),
          user_rooms <- Chats.get_user_rooms(user_id),
-         _ <- Chats.update_room_users(user_rooms, user_id, deleted_user_id),
+         user_room_ids <- Enum.map(user_rooms, fn row -> row[:room_id] end),
+         _ <- Chats.update_room_users(user_room_ids, user_id, deleted_user_id),
          _ <- Chats.update_messages(user_id, deleted_user_id),
          _ <- Chats.delete_user(user_id) do
       send_resp(conn, :no_content, "")
