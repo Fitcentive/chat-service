@@ -33,10 +33,10 @@ spec:
           resources:
             requests:
               memory: 300Mi
-              cpu: "0.5"
+              cpu: "0.3"
             limits:
               memory: 500Mi
-              cpu: "1.0"
+              cpu: "0.5"
           ports:
             - name: http-port
               containerPort: 9000
