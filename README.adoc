@@ -76,6 +76,17 @@ Note - these pre-requisites need only be done **once ever**. If you are deployin
 - For Android or iOS, copy the `rootCA.pem` or `rootCA.der` file generated in step 1 into the device filesystem. Then, follow device specific instructions to trust the certificate
 - One might require conversion of `.pem` to `.der` or vice versa - make sure you use the right format (conversion is easy via a quick search)
 
+== Deploy to GKE Dev env
+1. Delete existing 1.0 image first
+- `gcloud container images delete gcr.io/fitcentive-dev/social:1.0 --force-delete-tags`
+2. Build and push new docker image
+    - `docker build -t gcr.io/fitcentive-dev/chat:latest -t gcr.io/fitcentive-dev/chat:1.0 .`
+    - `docker push gcr.io/fitcentive-dev/chat:1.0`
+3. Ensure you are on the right `kubectl` context
+4. `cd deployment`
+5. `kubectl apply -f gke-dev-env`
+
+
 == Learn more
 
 * Official website: https://www.phoenixframework.org/

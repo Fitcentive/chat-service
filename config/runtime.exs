@@ -130,7 +130,7 @@ if config_env() == :prod do
     }
 
   config :goth,
-    json: {:system, "GCP_CREDENTIALS"}
+    json: {:system, "GOOGLE_APPLICATION_CREDENTIALS"}
 
   config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
     topics: %{
