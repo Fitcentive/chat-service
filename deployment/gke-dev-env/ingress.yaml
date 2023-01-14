@@ -14,7 +14,7 @@ spec:
   tls:
     - hosts:
         - api.fitcentive.xyz
-      secretName: user-tls-certificate
+      secretName: chat-tls-certificate
   rules:
     - host: api.fitcentive.xyz
       http:
