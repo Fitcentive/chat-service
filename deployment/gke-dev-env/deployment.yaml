@@ -61,33 +61,17 @@ spec:
                 name: chat-service-cloudsql-database-url
             - secretRef:
                 name: chat-service-cloudsql-database-credentials
+            - secretRef:
+                name: chat-service-native-auth-public-credentials
+            - secretRef:
+                name: chat-service-facebook-auth-public-credentials
+            - secretRef:
+                name: chat-service-google-auth-public-credentials
+            - secretRef:
+                name: chat-service-apple-auth-public-credentials
           env:
             - name: DELETED_USER_ID
               value: "aaaaaaaa-aaaa-8bbb-8bbb-aaaaaaaaaaaa"
-            - name: NATIVE_AUTH_KEY_ID
-              value: "Dhb5KyQiZHEBLrAhiYltrBLEamD4nnh61eFM4FsnGO0"
-            - name: NATIVE_AUTH_PUBLIC_KEY
-              value: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB"
-            - name: NATIVE_AUTH_ISSUER
-              value: "https://auth.fitcentive.xyz/auth/realms/NativeAuth"
-            - name: GOOGLE_AUTH_KEY_ID
-              value: "ZK_xufw1gGfVqJ-3a4aJM9EzZRfxp1Z6_AH2fCpYvtk"
-            - name: GOOGLE_AUTH_PUBLIC_KEY
-              value: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhZrtxOu/AVm6H001Xlthefixpf79nUqgs/jKZQzp1RS8tm3deERalaphxvFrtxju35fcEJgaXzIa+hq6yP6EnAiXTOY+MeF16unxx4jUJr/ZW+S/0Cj+c7XDYSO/aYOuOcd6M4lTuPYWQNrwDfywU8FBzd1gH98vscQ4b74BisYCRx0tl6xDwpGrrpBdPrlSeTJau6MZaYbrVrplRZXxmJxwUitS0hXhzZw5gP0380T2nvcTL2eMexm5atUG83JU74dts+Fec8wGyqGxouVAJi3rmEVBquqh1HhryM4QhCeXigIr4Qw6weAQpXtQpMYq6USv6F3B2+us29T4JmG/fwIDAQAB"
-            - name: GOOGLE_AUTH_ISSUER
-              value: "https://auth.fitcentive.xyz/auth/realms/GoogleAuth"
-            - name: APPLE_AUTH_KEY_ID
-              value: "qdczNS1H48MCBJ7QD0dhnv_o_BikgoN4U79--nQmxT0"
-            - name: APPLE_AUTH_PUBLIC_KEY
-              value: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmVDJ4ZXPO09a6eHHWmke2TbBzvsLZIy7dITsJIxu3eYK5oNPF4hVZzP75AMbtSiMuHKIiEji7CulZmd7pu25nUidKNVYB4Kh66kaWsiJ6z7iqTz6Xajc25AdOiQTCk6aE8HqVKSXNULhC53ZF7uMKApEdlvEDPubpUmj/FR8oIBPwmoyovW3JUhydqcMxyplBemrwxPw9SCJhbOaBJtShiyJ+q5xQL23gltweUiVHT6UT2EkNNQpS1uBCeLNguVSEUGFDw4YYTFkKiMBEjhjfHYdeAx5dmq5hVCf2ECphIxeKrb6z3+xz5iRW4yvr7s2ix+dvnybaf11186qLHARSwIDAQAB"
-            - name: APPLE_AUTH_ISSUER
-              value: "https://auth.fitcentive.xyz/auth/realms/AppleAuth"
-            - name: FACEBOOK_AUTH_KEY_ID
-              value: "e28-PLM8vJ6rBS8TDTNH5UOCgi5mql2MBIl88Fk_F6o"
-            - name: FACEBOOK_AUTH_PUBLIC_KEY
-              value: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA28RGo7/MXNpJTNhOybAM85vXFwb6imoHrnbEr9t0egzJhR4GSLMCQUozQ+K1FruZ+LHnHzMMkZFUnz1veaXaAV9Vxum3iuoD1hGHjRtADzNuLqoclj3XgCH9EkbXzI9MvFK83M6pAa6Udt3kpHrIxL4nt5Tk6H12PkpV9x4vPcGOfdT2UTiDdpnT2RW0+IiuG52/hkBSTg4Kew/FU/5mNcGI8fKh2wnHIWdVZY+PfXMPIZ+eKw4QLprk+fKXZ7cKcKK+zHZJNbxNkR1E+pjduPY5+kyagjEW/oO/NU5CEOdW8jabjzRILBDaZRvNjvDiK1Rf3SfhFn9lXJxDZHZ4OQIDAQAB"
-            - name: FACEBOOK_AUTH_ISSUER
-              value: "https://auth.fitcentive.xyz/auth/realms/FacebookAuth"
             - name: SECRET_KEY_BASE
               value: "+V4JJUEQH/9NgEcRJUL4hxZn6Vag1naJkSb+ms4EJeHp1tOiTFeFRZPBhcLpDtah"
             - name: PHX_HOST

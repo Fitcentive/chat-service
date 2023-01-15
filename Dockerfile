@@ -89,4 +89,4 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/chat ./
 
 USER nobody
 
-CMD ["/app/bin/server"]
+CMD ["sh", "-c", "/app/bin/chat eval Chat.Release.migrate && /app/bin/server"]
