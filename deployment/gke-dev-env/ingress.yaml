@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     # Allow origin for webapp to access websockets exposed
-    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:5555, ionic://localhost"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://app.fitcentive.xyz, http://localhost:5555, ionic://localhost"
 spec:
   tls:
     - hosts:
