@@ -22,7 +22,8 @@ defmodule ChatWeb.Endpoint do
            "//localhost:4000",
            "//localhost:5555",
            "http://localhost:5555",
-           "//*.other.com"
+           "//*.other.com",
+           "http://app.fitcentive.xyz",
          ]
 
 
