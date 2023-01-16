@@ -63,6 +63,7 @@ if config_env() == :prod do
     ],
     check_origin: [
       "http://localhost:5555",
+      "http://app.fitcentive.xyz",
     ],
     secret_key_base: secret_key_base
 
