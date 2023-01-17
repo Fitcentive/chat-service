@@ -24,6 +24,11 @@ defmodule ChatWeb.Endpoint do
            "http://localhost:5555",
            "//*.other.com",
            "https://app.fitcentive.xyz",
+           "http://app.fitcentive.xyz",
+           "https://api.fitcentive.xyz",
+           "http://api.fitcentive.xyz",
+           "//api.fitcentive.xyz",
+           "//app.fitcentive.xyz",
          ]
 
 
