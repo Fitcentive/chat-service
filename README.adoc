@@ -78,10 +78,10 @@ Note - these pre-requisites need only be done **once ever**. If you are deployin
 
 == Deploy to GKE Dev env
 1. Delete existing 1.0 image first
-- `gcloud container images delete gcr.io/fitcentive-dev/social:1.0 --force-delete-tags`
+- `gcloud container images delete gcr.io/fitcentive-dev-02/social:1.0 --force-delete-tags`
 2. Build and push new docker image
-    - `docker build -t gcr.io/fitcentive-dev/chat:latest -t gcr.io/fitcentive-dev/chat:1.0 .`
-    - `docker push gcr.io/fitcentive-dev/chat:1.0`
+    - `docker build -t gcr.io/fitcentive-dev-02/chat:latest -t gcr.io/fitcentive-dev-02/chat:1.0 .`
+    - `docker push gcr.io/fitcentive-dev-02/chat:1.0`
 3. Ensure you are on the right `kubectl` context
 4. `cd deployment`
 5. `kubectl apply -f gke-dev-env`

@@ -21,14 +21,14 @@ spec:
           image: gcr.io/cloudsql-docker/gce-proxy:1.33.1
           command:
             - /cloud_sql_proxy
-            - -instances=fitcentive-dev:northamerica-northeast2:gke-dev-env-cloud-sql-instance:=tcp:5432
+            - -instances=fitcentive-dev-02:northamerica-northeast2:gke-dev-env-cloud-sql-instance:=tcp:5432
             - -credential_file=/secrets/cloudsql/credentials.json
           volumeMounts:
             - name: cloudsql-creds
               mountPath: /secrets/cloudsql
               readOnly: true
         - name: chat-service
-          image: gcr.io/fitcentive-dev/chat:1.0
+          image: gcr.io/fitcentive-dev-02/chat:1.0
           imagePullPolicy: Always
           resources:
             requests:
