@@ -10,7 +10,7 @@ docker image rm gcr.io/fitcentive-dev-02/chat:1.0
 docker image rm gcr.io/fitcentive-dev-02/chat
 
 # Build and push image to gcr
-docker build -t gcr.io/fitcentive-dev-02/chat:latest -t gcr.io/fitcentive-dev-02/chat:1.0 ../.
+docker build -t gcr.io/fitcentive-dev-02/chat:latest -t gcr.io/fitcentive-dev-02/chat:1.0 .
 docker push gcr.io/fitcentive-dev-02/chat:1.0
 
 kubectl apply -f deployment/gke-dev-env/

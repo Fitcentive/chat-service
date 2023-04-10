@@ -37,7 +37,7 @@ defmodule Chat.Repo.Chats do
       nil -> :error
       _   ->
         case target_users
-             |> Chats.get_user_if_exists()
+             |> Enum.map(fn user -> Chats.get_user_if_exists(user)  end)
              |> Enum.all?() do
           true -> :ok
           false -> :error

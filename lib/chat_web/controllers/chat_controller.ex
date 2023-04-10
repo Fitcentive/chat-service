@@ -31,8 +31,8 @@ defmodule ChatWeb.ChatController do
     user_id = conn.assigns[:claims]["user_id"]
     with :ok <- Bodyguard.permit(Chats, :check_if_all_users_exist, user_id, target_users),
          room_name <- [user_id | target_users]
-                      |> Chats.get_user_if_exists()
-                      |> Enum.map(fn user -> "#{user.first_name}}" end)
+                      |> Enum.map(fn uid -> Chats.get_user_if_exists(uid) end)
+                      |> Enum.map(fn user -> "#{user.first_name}" end)
                       |> Enum.join(", "),
          room_id <- UUID.uuid4(),
          new_room <- %{id: room_id, name: room_name, type: "group"},
