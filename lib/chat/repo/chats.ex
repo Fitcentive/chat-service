@@ -182,7 +182,7 @@ defmodule Chat.Repo.Chats do
          created_at: room.created_at,
          updated_at: room.updated_at
       },
-      where: room_user.user_id == ^user_id
+      where: room_user.user_id == ^user_id and room.id in ^room_ids
 
     query
     |> Repo.all
