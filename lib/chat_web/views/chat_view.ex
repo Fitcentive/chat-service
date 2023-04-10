@@ -3,6 +3,10 @@ defmodule ChatWeb.ChatView do
 
   alias ChatWeb.ChatView
 
+  def render("show_room_definitions.json", %{rooms: rooms}) do
+    render_many(rooms, ChatView, "show_room.json", as: :room)
+  end
+
   def render("show_rooms.json", %{rooms: rooms}) do
     render_many(rooms, ChatView, "show_room_with_users.json", as: :room_with_users)
   end
