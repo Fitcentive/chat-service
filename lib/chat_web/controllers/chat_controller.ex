@@ -63,6 +63,13 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def get_chat_room_definitions(conn, %{"room_ids" => room_ids}) do
+    user_id = conn.assigns[:claims]["user_id"]
+    with rooms <- Chats.get_room_definitions(room_ids, user_id) do
+      render(conn, "show_rooms.json", rooms: rooms)
+    end
+  end
+
   def get_most_recent_room_messages(conn, %{"room_ids" => room_ids}) when is_list(room_ids) do
     user_id = conn.assigns[:claims]["user_id"]
 

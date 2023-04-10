@@ -1,5 +1,7 @@
 #!/bin/bash
 
+kubectl delete -n chat deployment/chat-service
+
 # Delete old 1.0 image from gcr
 echo "y" | gcloud container images delete gcr.io/fitcentive-dev-02/chat:1.0 --force-delete-tags
 

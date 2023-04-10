@@ -170,6 +170,24 @@ defmodule Chat.Repo.Chats do
     |> Repo.all
   end
 
+  def get_room_definitions(room_ids, user_id) do
+    query =
+      from room in Room,
+      left_join: room_user in RoomUser,
+      on: room_user.room_id == room.id,
+      select: %{
+         id: room.id,
+         name: room.name,
+         type: room.type,
+         created_at: room.created_at,
+         updated_at: room.updated_at
+      },
+      where: room_user.user_id == ^user_id
+
+    query
+    |> Repo.all
+  end
+
   def get_user_rooms(user_id) do
     cte_query =
       from room_user in RoomUser,
