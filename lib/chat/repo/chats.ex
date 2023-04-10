@@ -32,6 +32,19 @@ defmodule Chat.Repo.Chats do
     end
   end
 
+  def authorize(:check_if_all_users_exist, user_id, target_users) do
+    case Chats.get_user_if_exists(user_id) do
+      nil -> :error
+      _   ->
+        case target_users
+             |> Chats.get_user_if_exists()
+             |> Enum.all?() do
+          true -> :ok
+          false -> :error
+        end
+    end
+  end
+
   #----------------------------------------------------------------------------
 
   defmacro array_agg(field) do
