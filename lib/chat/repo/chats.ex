@@ -312,10 +312,9 @@ defmodule Chat.Repo.Chats do
   end
 
   def update_room_name(room_id, room_name) do
-    {:ok, room_id_uuid} = Ecto.UUID.dump(room_id)
     query =
       from room in Room,
-           where: room.id == ^room_id_uuid,
+           where: room.id == ^room_id,
            update: [set: [name: ^room_name]]
 
     query
