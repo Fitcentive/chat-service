@@ -76,6 +76,21 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def add_user_to_room(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+        _ <- Chats.upsert_room_user(%{"room_id" => room_id, "user_id" => user_id}) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def remove_user_from_room(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+         _ <- Chats.remove_user_from_room(room_id, user_id) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+
   def get_most_recent_room_messages(conn, %{"room_ids" => room_ids}) when is_list(room_ids) do
     user_id = conn.assigns[:claims]["user_id"]
 

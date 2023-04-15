@@ -41,8 +41,11 @@ defmodule ChatWeb.Router do
     post "/get-chat-rooms", ChatController, :get_chat_room_definitions
     post "/get-chat-room", ChatController, :get_chat_room
 
-    get  "/room/:room_id/messages", ChatController, :get_room_messages
-    get  "/room/:room_id/users", ChatController, :get_room_users
+    get    "/room/:room_id/messages",       ChatController, :get_room_messages
+
+    get    "/room/:room_id/users",          ChatController, :get_room_users
+    post   "/room/:room_id/users/:user_id", ChatController, :add_user_to_room
+    delete "/room/:room_id/users/:user_id", ChatController, :remove_user_from_room
 
     post "/room/most-recent-message", ChatController, :get_most_recent_room_messages
 

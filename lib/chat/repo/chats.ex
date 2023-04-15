@@ -21,6 +21,13 @@ defmodule Chat.Repo.Chats do
     end
   end
 
+  def authorize(:check_if_user_exists, user_id) do
+    case Chats.get_user_if_exists(user_id) do
+      nil -> :error
+      _   -> :ok
+    end
+  end
+
   def authorize(:check_if_users_exist, user_id, target_user) do
     case Chats.get_user_if_exists(user_id) do
       nil -> :error
@@ -135,6 +142,15 @@ defmodule Chat.Repo.Chats do
       conflict_target: :id,
       returning: true,
     )
+  end
+
+  def remove_user_from_room(room_id, user_id) do
+    query =
+      from room_user in RoomUser,
+      where: room_user.room_id == ^room_id and room_user.user_id == ^user_id
+
+    query
+    |> Repo.delete_all
   end
 
   # Todo - replace with with Ecto.Multi
