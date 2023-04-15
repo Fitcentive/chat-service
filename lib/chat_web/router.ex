@@ -43,6 +43,7 @@ defmodule ChatWeb.Router do
 
     get    "/room/:room_id/messages",       ChatController, :get_room_messages
 
+    put    "/room/:room_id",                ChatController, :update_room_name
     get    "/room/:room_id/users",          ChatController, :get_room_users
     post   "/room/:room_id/users/:user_id", ChatController, :add_user_to_room
     delete "/room/:room_id/users/:user_id", ChatController, :remove_user_from_room

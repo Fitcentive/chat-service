@@ -145,9 +145,11 @@ defmodule Chat.Repo.Chats do
   end
 
   def remove_user_from_room(room_id, user_id) do
+    {:ok, user_id_uuid} = Ecto.UUID.dump(user_id)
+    {:ok, room_id_uuid} = Ecto.UUID.dump(room_id)
     query =
       from room_user in RoomUser,
-      where: room_user.room_id == ^room_id and room_user.user_id == ^user_id
+      where: room_user.room_id == ^room_id_uuid and room_user.user_id == ^user_id_uuid
 
     query
     |> Repo.delete_all
@@ -307,6 +309,17 @@ defmodule Chat.Repo.Chats do
 
     query
       |> Repo.update_all([])
+  end
+
+  def update_room_name(room_id, room_name) do
+    {:ok, room_id_uuid} = Ecto.UUID.dump(room_id)
+    query =
+      from room in Room,
+           where: room.id == ^room_id_uuid,
+           update: [set: [name: ^room_name]]
+
+    query
+    |> Repo.update_all([])
   end
 
   def update_messages(user_id, deleted_user_id) do
