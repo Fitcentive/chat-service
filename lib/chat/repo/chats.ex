@@ -21,7 +21,7 @@ defmodule Chat.Repo.Chats do
     end
   end
 
-  def authorize(:check_if_user_exists, user_id) do
+  def authorize(:check_if_user_exists, user_id, _) do
     case Chats.get_user_if_exists(user_id) do
       nil -> :error
       _   -> :ok
