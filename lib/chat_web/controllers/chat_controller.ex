@@ -50,7 +50,7 @@ defmodule ChatWeb.ChatController do
                       |> Enum.map(fn user -> "#{user.first_name}" end)
                       |> Enum.join(", "),
          room_id <- UUID.uuid4(),
-         new_room <- %{id: room_id, name: room_name, type: "group"},
+         new_room <- %{id: room_id, name: room_name, type: "group", enabled: true},
          room <- Chats.upsert_room(new_room),
          _ <- Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => user_id}),
          _ <- target_users
@@ -68,7 +68,7 @@ defmodule ChatWeb.ChatController do
                                       |> Enum.sort
                                       |> Enum.join("-")
     room_id = UUID.uuid5(:nil, room_name)
-    new_room = %{id: room_id, name: room_name, type: "private"}
+    new_room = %{id: room_id, name: room_name, type: "private", enabled: true}
 
     with :ok <- Bodyguard.permit(Chats, :check_if_users_exist, user_id, target_user),
         room <- Chats.upsert_room(new_room),
@@ -91,21 +91,27 @@ defmodule ChatWeb.ChatController do
     end
   end
 
-  # todo - Currently, anyone can add/remove user from room. Only "admins" should be able to do it
+  # todo - Currently, anyone in room can add/remove user from room. Only "admins" should be able to do it
   def add_user_to_room(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    current_user_id = conn.assigns[:claims]["user_id"]
+
     with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+         :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, current_user_id, room_id),
         _ <- Chats.upsert_room_user(%{"room_id" => room_id, "user_id" => user_id}) do
       send_resp(conn, :no_content, "")
     end
   end
 
+  # todo - Currently, anyone in room can add/remove user from room. Only "admins" should be able to do it
   def remove_user_from_room(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    current_user_id = conn.assigns[:claims]["user_id"]
+
     with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+         :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, current_user_id, room_id),
          _ <- Chats.remove_user_from_room(room_id, user_id) do
       send_resp(conn, :no_content, "")
     end
   end
-
 
   def update_room_name(conn, params = %{"room_id" => room_id, "room_name" => room_name}) do
     with _ <- Chats.update_room_name(room_id, room_name) do
@@ -175,6 +181,44 @@ defmodule ChatWeb.ChatController do
     |> Kernel.+(datetime.usec)
     |> div(1000)
     |> IO.inspect
+  end
+
+
+  ###
+  # INTERNAL ROUTES
+  ###
+  # No need to Bodyguard as this is only accessed via internal route
+  def enable_room(conn, params = %{"room_id" => room_id}) do
+    with _ <- Chats.enable_room(room_id) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  # No need to Bodyguard as this is only accessed via internal route
+  def disable_room(conn, params = %{"room_id" => room_id}) do
+    with _ <- Chats.disable_room(room_id) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def add_user_to_room_internal(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+         _ <- Chats.upsert_room_user(%{"room_id" => room_id, "user_id" => user_id}) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def remove_user_from_room_internal(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_exists, user_id),
+         _ <- Chats.remove_user_from_room(room_id, user_id) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def delete_chat_room_internal(conn, params = %{"room_id" => room_id}) do
+    with _ <- Chats.delete_room(room_id) do
+      send_resp(conn, :no_content, "")
+    end
   end
 
 end

@@ -21,6 +21,13 @@ defmodule Chat.Repo.Chats do
     end
   end
 
+  def authorize(:check_if_user_belongs_to_room, user_id, room_id) do
+    case Chats.get_room_user_if_exists(room_id, user_id) do
+      nil -> :error
+      _   -> :ok
+    end
+  end
+
   def authorize(:check_if_user_exists, user_id, _) do
     case Chats.get_user_if_exists(user_id) do
       nil -> :error
@@ -144,6 +151,26 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  def enable_room(room_id) do
+    query =
+      from room in Room,
+           where: room.id == ^room_id,
+           update: [set: [enabled: true]]
+
+    query
+    |> Repo.update_all([])
+  end
+
+  def disable_room(room_id) do
+    query =
+      from room in Room,
+           where: room.id == ^room_id,
+           update: [set: [enabled: false]]
+
+    query
+    |> Repo.update_all([])
+  end
+
   def remove_user_from_room(room_id, user_id) do
     {:ok, user_id_uuid} = Ecto.UUID.dump(user_id)
     {:ok, room_id_uuid} = Ecto.UUID.dump(room_id)
@@ -206,7 +233,14 @@ defmodule Chat.Repo.Chats do
     |> Repo.all
   end
 
+  # We need to filter by user enabled rooms here
   def get_user_rooms(user_id) do
+    enabled_rooms = Repo.all(
+      from room in Room,
+      select: room.id,
+      where: room.enabled
+    )
+
     cte_query =
       from room_user in RoomUser,
       left_join: message in Message,
@@ -222,7 +256,7 @@ defmodule Chat.Repo.Chats do
           room_id: room_user.room_id
         },
         where: room_user.user_id == ^user_id
-      ),
+      ) and room_user.room_id in ^enabled_rooms,
       group_by: [room_user.room_id, room_user.user_id]
 
     result = "t1"
@@ -340,6 +374,15 @@ defmodule Chat.Repo.Chats do
 
     query
       |> Repo.delete_all()
+  end
+
+  def delete_room(room_id) do
+    query =
+      from room in Room,
+           where: room.id == ^room_id
+
+    query
+    |> Repo.delete_all()
   end
 
 end

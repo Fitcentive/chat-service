@@ -60,6 +60,14 @@ defmodule ChatWeb.Router do
     pipe_through :api
 
     delete "/user/:user_id", ChatController, :delete_user_data
+
+    delete "/room/:room_id",                ChatController, :delete_chat_room_internal
+
+    post   "/room/:room_id/enable",         ChatController, :enable_room
+    post   "/room/:room_id/disable",        ChatController, :disable_room
+
+    post   "/room/:room_id/users/:user_id", ChatController, :add_user_to_room_internal
+    delete "/room/:room_id/users/:user_id", ChatController, :remove_user_from_room_internal
    end
 
   # Enables LiveDashboard only for development

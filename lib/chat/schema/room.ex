@@ -11,6 +11,7 @@ defmodule Chat.Schema.Room do
   schema "room" do
     field :name, :string
     field :type, :string
+    field :enabled, :boolean
 
     timestamps(inserted_at: :created_at)
   end
@@ -19,11 +20,8 @@ defmodule Chat.Schema.Room do
     time = DateTime.utc_now()
            |> DateTime.truncate(:second)
 
-    #  Not validating the column 'value' to allow empty strings to be stored as Attribute Values
-    #  Ecto validate_required/3 throw errors and remove the column when an empty string
-    #  Also setting the list of empty_values in cast/4 to not consider "" as empty. By default it is [""]
     room
-    |> cast(params, [:id, :name, :type])
+    |> cast(params, [:id, :name, :type, :enabled])
     |> validate_required([:id, :type])
     |> put_change(:created_at, time)
     |> put_change(:updated_at, time)
