@@ -27,6 +27,21 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def get_chat_room(conn, params = %{"room_name" => room_name, "target_users" => target_users = [h | t]}) do
+    user_id = conn.assigns[:claims]["user_id"]
+    with :ok <- Bodyguard.permit(Chats, :check_if_all_users_exist, user_id, target_users),
+         room_id <- UUID.uuid4(),
+         new_room <- %{id: room_id, name: room_name, type: "group"},
+         room <- Chats.upsert_room(new_room),
+         _ <- Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => user_id}),
+         _ <- target_users
+              |> Enum.map(
+                   fn other_user -> Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => other_user}) end
+                 ) do
+      render(conn, "show_room.json", room: room)
+    end
+  end
+
   def get_chat_room(conn, %{"target_users" => target_users}) when is_list(target_users) do
     user_id = conn.assigns[:claims]["user_id"]
     with :ok <- Bodyguard.permit(Chats, :check_if_all_users_exist, user_id, target_users),
