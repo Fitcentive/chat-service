@@ -1,4 +1,4 @@
-defmodule Chat.Repo.Migrations.CreateRoomTable do
+defmodule Chat.Repo.Migrations.AlterRoomTable do
   use Ecto.Migration
   alias Chat.Schema.Room
 

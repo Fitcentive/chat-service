@@ -9,6 +9,7 @@ defmodule Chat.Repo.Chats do
   alias Chat.Schema.Room
   alias Chat.Schema.RoomUser
   alias Chat.Schema.User
+  alias Chat.Schema.UserLastSeen
 
   alias Chat.Repo.Chats
 
@@ -106,6 +107,13 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  defp user_last_seen_changeset(room_user_params) do
+    UserLastSeen.changeset(
+      %UserLastSeen{},
+      Map.merge(room_user_params, %{})
+    )
+  end
+
   #------------------------------------------------------------------------------------------------------------
 
   def upsert_user(user_params) do
@@ -130,6 +138,15 @@ defmodule Chat.Repo.Chats do
     Repo.insert!(
       room_user_changeset(room_user_params),
       on_conflict: {:replace, [:updated_at]},
+      conflict_target: [:room_id, :user_id],
+      returning: true,
+    )
+  end
+
+  def upsert_user_last_seen(room_user_params) do
+    Repo.insert!(
+      user_last_seen_changeset(room_user_params),
+      on_conflict: {:replace, [:last_seen, :updated_at]},
       conflict_target: [:room_id, :user_id],
       returning: true,
     )
@@ -207,7 +224,8 @@ defmodule Chat.Repo.Chats do
       from message in Message,
            select: %{
              room_id: message.room_id,
-             most_recent_message: array_agg_most_recent(message.text)
+             most_recent_message: array_agg_most_recent(message.text),
+             most_recent_message_time: array_agg_most_recent(message.created_at)
            },
            where: message.room_id in ^room_ids,
            group_by: [message.room_id]
@@ -313,6 +331,16 @@ defmodule Chat.Repo.Chats do
 
     query
       |> Repo.one
+  end
+
+  def get_user_last_seen_if_exists(room_id, user_id) do
+    query =
+      from user_last_seen in UserLastSeen,
+      select: user_last_seen,
+      where: user_last_seen.room_id == ^room_id and user_last_seen.user_id == ^user_id
+
+    query
+    |> Repo.one
   end
 
   def get_users_for_room(room_id) do

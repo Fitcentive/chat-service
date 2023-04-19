@@ -172,6 +172,27 @@ defmodule ChatWeb.ChatController do
 
   end
 
+  def upsert_user_last_seen(conn, params = %{"room_id" => room_id}) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, user_id, room_id),
+         _ <- Chats.upsert_user_last_seen(%{"room_id" => room_id, "user_id" => user_id}) do
+      send_resp(conn, :no_content, "")
+    end
+  end
+
+  def get_user_last_seen(conn, params = %{"room_id" => room_id}) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, user_id, room_id),
+         last_seen_opt <- Chats.get_user_last_seen_if_exists(room_id, user_id) do
+      case last_seen_opt do
+        nil -> send_resp(conn, :not_found, "")
+        last_seen -> render(conn, "show_user_last_seen.json", user_last_seen: last_seen)
+      end
+    end
+  end
+
   defp datetime_to_epoch_milliseconds(datetime) do
     datetime
     |> Ecto.DateTime.to_erl

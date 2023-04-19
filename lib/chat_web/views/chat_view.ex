@@ -35,6 +35,16 @@ defmodule ChatWeb.ChatView do
     }
   end
 
+  def render("show_user_last_seen.json", %{user_last_seen: user_last_seen}) do
+    %{
+      room_id: user_last_seen.room_id,
+      user_id: user_last_seen.user_id,
+      last_seen: user_last_seen.last_seen,
+      created_at: user_last_seen.created_at,
+      updated_at: user_last_seen.updated_at
+    }
+  end
+
 
   def render("show_most_recent_room_messages.json", %{most_recent_room_messages: most_recent_room_messages}) do
     render_many(most_recent_room_messages, ChatView, "show_most_recent_room_message.json", as: :most_recent_room_message)
@@ -44,6 +54,7 @@ defmodule ChatWeb.ChatView do
     %{
       room_id: most_recent_room_message.room_id,
       most_recent_message: most_recent_room_message.most_recent_message,
+      most_recent_message_time: most_recent_room_message.most_recent_message_time,
     }
   end
 
