@@ -94,6 +94,9 @@ if config_env() == :prod do
   config :service_secret, ChatWeb.ChatRoomChannel,
          secret: System.get_env("INTERNAL_SERVICE_SECRET")
 
+  config :service_secret, ChatWeb.RoomObserverChannel,
+         secret: System.get_env("INTERNAL_SERVICE_SECRET")
+
   config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
     keyIdPublicKeys: %{
      System.get_env("NATIVE_AUTH_KEY_ID") => %{

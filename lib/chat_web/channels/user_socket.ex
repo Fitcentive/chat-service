@@ -29,6 +29,8 @@ defmodule ChatWeb.UserSocket do
 
   channel "room_observer:*",        ChatWeb.RoomObserverChannel
 
+  channel "user_room_observer:*",        ChatWeb.UserRoomObserverChannel
+
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After

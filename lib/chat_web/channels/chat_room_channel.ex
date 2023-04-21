@@ -99,8 +99,8 @@ defmodule ChatWeb.ChatRoomChannel do
       topic: "room_observer:#{room_id}",
       event: "phx_join",
       payload: %{},
-      ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29",
-      join_ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29"
+      ref: UUID.uuid4(),
+      join_ref: UUID.uuid4()
     })})
 
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
@@ -109,8 +109,8 @@ defmodule ChatWeb.ChatRoomChannel do
       payload: %{
         room_id: room_id,
       },
-      ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29",
-      join_ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29"
+      ref: UUID.uuid4(),
+      join_ref: UUID.uuid4()
     })})
 
     WebSockex.send_frame(newSocket, {:close, 1000, "Closing message"})

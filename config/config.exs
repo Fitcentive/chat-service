@@ -61,6 +61,9 @@ config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
 config :service_secret, ChatWeb.ChatRoomChannel,
        secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
 
+config :service_secret, ChatWeb.RoomObserverChannel,
+       secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
+
 config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
   keyIdPublicKeys: %{
    "ZK_xufw1gGfVqJ-3a4aJM9EzZRfxp1Z6_AH2fCpYvtk" => %{
