@@ -24,8 +24,10 @@ defmodule ChatWeb.UserSocket do
   # See the [`Channels guide`](https://hexdocs.pm/phoenix/channels.html)
   # for further details.
 
-  channel "chat_room:lobby", ChatWeb.ChatRoomChannel
-  channel "chat_room:*", ChatWeb.ChatRoomChannel
+  channel "chat_room:lobby",        ChatWeb.ChatRoomChannel
+  channel "chat_room:*",            ChatWeb.ChatRoomChannel
+
+  channel "room_observer:*",        ChatWeb.RoomObserverChannel
 
 
   # Socket params are passed from the client and can
@@ -40,15 +42,15 @@ defmodule ChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   @impl true
-  def connect(%{"token" => token}, socket, _connect_info) do
+  def connect(%{"token" => bearerToken}, socket, _connect_info) do
 
-    [{:ok, rawHeader} | rest ] = token
+    [{:ok, rawHeader} | rest ] = bearerToken
                                  |> String.split(".")
                                  |> Enum.map(&(Base.decode64(&1, padding: false)))
 
     %{"kid" => key_id} = Poison.decode!(rawHeader)
 
-    case VerifyBearerToken.verify_token(token, key_id) do
+    case VerifyBearerToken.verify_token(bearerToken, key_id) do
       {:ok, %{
         "user_id" => userId,
         "given_name" => first_name,
@@ -61,6 +63,15 @@ defmodule ChatWeb.UserSocket do
     end
 
   end
+
+  @impl true
+  def connect(%{"secret" => opaque_secret}, socket, _connect_info) do
+    case VerifyBearerToken.verify_service_secret(opaque_secret) do
+       :ok     -> {:ok, socket}
+       :error  -> :error
+     end
+  end
+
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #

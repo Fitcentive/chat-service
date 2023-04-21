@@ -7,6 +7,8 @@ defmodule ChatWeb.ChatRoomChannel do
   alias ChatWeb.GcpPubSubClient
   alias ChatWeb.ChatRoomChannel
 
+  use WebSockex
+
   @impl true
   def join("chat_room:" <> room_id, %{"user_id" => user_id} = payload, socket) do
     if authorized?(room_id, user_id, socket) do
@@ -80,8 +82,38 @@ defmodule ChatWeb.ChatRoomChannel do
     }) do
       broadcast(socket, "shout", payload)
       send_push_notifications_to_offline_users(socket, room_id, user_id, text)
+      send_room_updated_broadcast_socket_channel_message(room_id)
       {:noreply, socket}
     end
+  end
+
+  defp send_room_updated_broadcast_socket_channel_message(room_id) do
+    {service_secret, _} = :service_secret
+                          |> Application.get_env(__MODULE__, %{})
+                          |> Keyword.split([:secret])
+
+    {:ok, newSocket} =
+      WebSockex.start("ws://127.0.0.1:4000/api/chat/socket/websocket?secret=#{service_secret[:secret]}", __MODULE__, :fake_state, [])
+
+    WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
+      topic: "room_observer:#{room_id}",
+      event: "phx_join",
+      payload: %{},
+      ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29",
+      join_ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29"
+    })})
+
+    WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
+      topic: "room_observer:#{room_id}",
+      event: "room_updated",
+      payload: %{
+        room_id: room_id,
+      },
+      ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29",
+      join_ref: "b4fdfca2-fb9e-4a33-85fd-080509bb9f29"
+    })})
+
+    WebSockex.send_frame(newSocket, {:close, 1000, "Closing message"})
   end
 
   defp send_push_notifications_to_offline_users(socket, room_id, user_id, text) do

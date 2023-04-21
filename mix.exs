@@ -56,6 +56,7 @@ defmodule Chat.MixProject do
       {:bodyguard, "~> 2.4"},
       {:kane, "~> 0.9.0"},
       {:cors_plug, "~> 3.0"},
+      {:websockex, "~> 0.4.3"},
     ]
   end
 

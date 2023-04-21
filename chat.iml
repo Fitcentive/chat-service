@@ -67,6 +67,7 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/goth" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/finch" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/cors_plug" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websockex" />
     </content>
     <orderEntry type="jdk" jdkName="Elixir 1.13.4" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -158,5 +159,6 @@
     <orderEntry type="library" name="httparrot" level="project" />
     <orderEntry type="library" name="hpack" level="project" />
     <orderEntry type="library" name="cors_plug" level="project" />
+    <orderEntry type="library" name="websockex" level="project" />
   </component>
 </module>

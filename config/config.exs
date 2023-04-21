@@ -58,6 +58,9 @@ config :deleted_user_id, ChatWeb.ChatController,
 config :service_secret, ChatWeb.Authentication.VerifyBearerToken,
   secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
 
+config :service_secret, ChatWeb.ChatRoomChannel,
+       secret: "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
+
 config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
   keyIdPublicKeys: %{
    "ZK_xufw1gGfVqJ-3a4aJM9EzZRfxp1Z6_AH2fCpYvtk" => %{
@@ -69,13 +72,13 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
      iss: "https://api.vid.app/auth/realms/GoogleAuth"
    },
 
-   "Dhb5KyQiZHEBLrAhiYltrBLEamD4nnh61eFM4FsnGO0" => %{
+   "FvVQglTSr4F98GxVSO930wTDSdkTTCntPpjA6gICv9k" => %{
      public_key: """
      -----BEGIN PUBLIC KEY-----
-     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAixbkaPx/USZN27DumqgVXCrciZyt9zZGjRgpVwJ2uIKTGW/nyUlRIP+yYnHcaCVyArHDNVf+7DCKzCdBocYGWhcFA0ERG6aWBBVBxbnfcLGGVEyxaa3GJG58iXIBgeVTYExM/roBXE6SmVZWDBZTZ7lwHT3D6KbQZBe34minZEcCBDma4VXX7CLLDlTF/PiDd4BoKcH1XuzF/0PJkGQnjNj+Z9pezbC+lCPL28mHWVqYoE2BWW2m8Pt6yi3D1CibfHaF3cjqg+DMtgTZDy8oAbjEeAPycA/KiHMNa0TBFGugXyd3UdtREmltMlDx5AU1QgP7eUmJnQYQEP+HFISS9QIDAQAB
+     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnwxrlR45xYuj77wJu3sIZqYmv7tcb0/p68E8mhz8VyAfEzdSTLko9dtruyUbmy6yhEDlzp5wJDnJmrSv/8R23zucJ/SjcdhJuwHSIF2se2eMKHTM2KP9B/KDcAk0hcHduzqC3JKDkj0aHgBgduBH+3Jpnye13j2FqbnBtoFIny1AlmHlCey7igr8UjZK+vikdufz7KeHgMjQJbrho3QhQo7zzunr90szwC+1CH95ZQl5Y6qzn74mg19tDoZJMMAgtimU6Rer8P5DcuTPG/hCV2VPw9Qx9aw0VkvzXomanzCC90e5rWjvWTQQlIzqC0l/sIogph9kkNqKD1Y6U4x42QIDAQAB
      -----END PUBLIC KEY-----
      """,
-     iss: "https://api.vid.app/auth/realms/NativeAuth"
+     iss: "https://auth.fitcentive.xyz/auth/realms/NativeAuth"
    },
 
     "qdczNS1H48MCBJ7QD0dhnv_o_BikgoN4U79--nQmxT0" => %{
