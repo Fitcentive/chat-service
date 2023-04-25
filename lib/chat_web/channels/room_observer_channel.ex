@@ -31,20 +31,20 @@ defmodule ChatWeb.RoomObserverChannel do
   end
 
   @impl true
-  def handle_in("room_updated", %{"room_id" => roomId} = payload, socket) do
+  def handle_in("room_updated", %{"room_id" => roomId, "user_id" => room_user_id} = payload, socket) do
     broadcast(socket, "room_updated", payload)
     with room_users <- Chats.get_users_for_room(roomId) do
       Enum.map(
         room_users.user_ids,
         fn user_id ->
-          send_user_room_updated_broadcast_socket_channel_message(UUID.binary_to_string!(user_id), roomId)
+          send_user_room_updated_broadcast_socket_channel_message(UUID.binary_to_string!(user_id), roomId, room_user_id)
         end
       )
       {:noreply, socket}
     end
   end
 
-  defp send_user_room_updated_broadcast_socket_channel_message(user_id, room_id) do
+  defp send_user_room_updated_broadcast_socket_channel_message(participant_user_id, room_id, room_user_id) do
     {service_secret, _} = :service_secret
                           |> Application.get_env(__MODULE__, %{})
                           |> Keyword.split([:secret])
@@ -53,7 +53,7 @@ defmodule ChatWeb.RoomObserverChannel do
         WebSockex.start("ws://127.0.0.1:4000/api/chat/socket/websocket?secret=#{service_secret[:secret]}", __MODULE__, :fake_state, [])
 
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
-      topic: "user_room_observer:#{user_id}",
+      topic: "user_room_observer:#{participant_user_id}",
       event: "phx_join",
       payload: %{},
       ref: UUID.uuid4(),
@@ -61,10 +61,11 @@ defmodule ChatWeb.RoomObserverChannel do
     })})
 
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
-      topic: "user_room_observer:#{user_id}",
+      topic: "user_room_observer:#{participant_user_id}",
       event: "user_room_updated",
       payload: %{
         room_id: room_id,
+        user_id: room_user_id,
       },
       ref: UUID.uuid4(),
       join_ref: UUID.uuid4()

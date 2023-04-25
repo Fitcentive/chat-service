@@ -65,6 +65,7 @@ defmodule ChatWeb.ChatRoomChannel do
     }) do
       broadcast(socket, "shout", payload)
       send_push_notifications_to_offline_users(socket, room_id, user_id, text)
+      send_room_updated_broadcast_socket_channel_message(room_id, user_id)
       {:noreply, socket}
     end
   end
@@ -82,12 +83,12 @@ defmodule ChatWeb.ChatRoomChannel do
     }) do
       broadcast(socket, "shout", payload)
       send_push_notifications_to_offline_users(socket, room_id, user_id, text)
-      send_room_updated_broadcast_socket_channel_message(room_id)
+      send_room_updated_broadcast_socket_channel_message(room_id, user_id)
       {:noreply, socket}
     end
   end
 
-  defp send_room_updated_broadcast_socket_channel_message(room_id) do
+  defp send_room_updated_broadcast_socket_channel_message(room_id, user_id) do
     {service_secret, _} = :service_secret
                           |> Application.get_env(__MODULE__, %{})
                           |> Keyword.split([:secret])
@@ -103,11 +104,13 @@ defmodule ChatWeb.ChatRoomChannel do
       join_ref: UUID.uuid4()
     })})
 
+    # todo - also send user_id that is sending the message in chat_room, so that consumers can filter out events on the basis of
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
       topic: "room_observer:#{room_id}",
       event: "room_updated",
       payload: %{
         room_id: room_id,
+        user_id: user_id,
       },
       ref: UUID.uuid4(),
       join_ref: UUID.uuid4()
