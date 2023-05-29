@@ -181,16 +181,15 @@ defmodule ChatWeb.ChatController do
     end
   end
 
-  def get_user_last_seen(conn, params = %{"room_id" => room_id}) do
+  def get_user_last_seen(conn, %{"room_ids" => room_ids}) when is_list(room_ids) do
     user_id = conn.assigns[:claims]["user_id"]
 
-    with :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, user_id, room_id),
-         last_seen_opt <- Chats.get_user_last_seen_if_exists(room_id, user_id) do
-      case last_seen_opt do
-        nil -> send_resp(conn, :not_found, "")
-        last_seen -> render(conn, "show_user_last_seen.json", user_last_seen: last_seen)
-      end
+    with bodyguard_results <- room_ids |> Enum.map(fn room_id -> Bodyguard.permit(Chats, :get_room_messages, user_id, room_id) end),
+         true <- Enum.all?(bodyguard_results, &match?(:ok, &1)),
+         user_room_last_seens <- room_ids |> Enum.map(fn room_id -> Chats.get_user_last_seen_if_exists(room_id, user_id) end) do
+      render(conn, "show_user_room_last_seens.json", user_room_last_seens: user_room_last_seens)
     end
+
   end
 
   defp datetime_to_epoch_milliseconds(datetime) do

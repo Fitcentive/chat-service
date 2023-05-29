@@ -49,7 +49,8 @@ defmodule ChatWeb.Router do
     delete "/room/:room_id/users/:user_id", ChatController, :remove_user_from_room
 
     put    "/room/:room_id/last-seen",      ChatController, :upsert_user_last_seen
-    get    "/room/:room_id/last-seen",      ChatController, :get_user_last_seen
+
+    post   "/room/get-last-seen",           ChatController, :get_user_last_seen
 
 
     post "/room/most-recent-message",       ChatController, :get_most_recent_room_messages
