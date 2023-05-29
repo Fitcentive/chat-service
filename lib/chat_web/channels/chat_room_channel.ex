@@ -83,8 +83,15 @@ defmodule ChatWeb.ChatRoomChannel do
     }) do
       broadcast(socket, "shout", payload)
       send_push_notifications_to_offline_users(socket, room_id, user_id, text)
-      send_room_updated_broadcast_socket_channel_message(room_id, user_id)
+      with room_users <- Chats.get_users_for_room(room_id) do
+        Enum.map(
+          room_users.user_ids,
+          fn user_id ->
+            send_room_updated_broadcast_socket_channel_message(room_id, UUID.binary_to_string!(user_id))
+          end
+        )
       {:noreply, socket}
+      end
     end
   end
 
@@ -97,17 +104,16 @@ defmodule ChatWeb.ChatRoomChannel do
       WebSockex.start("ws://127.0.0.1:4000/api/chat/socket/websocket?secret=#{service_secret[:secret]}", __MODULE__, :fake_state, [])
 
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
-      topic: "room_observer:#{room_id}",
+      topic: "user_room_observer:#{user_id}",
       event: "phx_join",
       payload: %{},
       ref: UUID.uuid4(),
       join_ref: UUID.uuid4()
     })})
 
-    # todo - also send user_id that is sending the message in chat_room, so that consumers can filter out events on the basis of
     WebSockex.send_frame(newSocket, {:text, Poison.encode!(%{
-      topic: "room_observer:#{room_id}",
-      event: "room_updated",
+      topic: "user_room_observer:#{user_id}",
+      event: "user_room_updated",
       payload: %{
         room_id: room_id,
         user_id: user_id,
