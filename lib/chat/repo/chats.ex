@@ -221,14 +221,11 @@ defmodule Chat.Repo.Chats do
   # todo - merge this with user rooms to save API call
   def most_recent_room_messages(room_ids) do
     query =
-      from message in Message,
-           select: %{
-             room_id: message.room_id,
-             most_recent_message: array_agg_most_recent(message.text),
-             most_recent_message_time: array_agg_most_recent(message.created_at)
-           },
-           where: message.room_id in ^room_ids,
-           group_by: [message.room_id]
+      from m in Message,
+           distinct: m.room_id,
+           where: m.room_id in ^room_ids,
+           order_by: [asc: m.room_id, desc: m.created_at],
+           select: %{room_id: m.room_id, most_recent_message: m.text, most_recent_message_time: m.created_at}
     query
     |> Repo.all
   end

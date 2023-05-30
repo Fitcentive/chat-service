@@ -184,9 +184,7 @@ defmodule ChatWeb.ChatController do
   def get_user_last_seen(conn, %{"room_ids" => room_ids}) when is_list(room_ids) do
     user_id = conn.assigns[:claims]["user_id"]
 
-    with bodyguard_results <- room_ids |> Enum.map(fn room_id -> Bodyguard.permit(Chats, :get_room_messages, user_id, room_id) end),
-         true <- Enum.all?(bodyguard_results, &match?(:ok, &1)),
-         user_room_last_seens <- room_ids |> Enum.map(fn room_id -> Chats.get_user_last_seen_if_exists(room_id, user_id) end) do
+    with user_room_last_seens <- room_ids |> Enum.map(fn room_id -> Chats.get_user_last_seen_if_exists(room_id, user_id) end) do
       render(conn, "show_user_room_last_seens.json", user_room_last_seens: user_room_last_seens)
     end
 
