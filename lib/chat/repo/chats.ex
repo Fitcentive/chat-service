@@ -313,7 +313,7 @@ defmodule Chat.Repo.Chats do
              most_recent_message_timestamp: max(m.created_at)
            }
 
-    result = Repo.all(query)
+    result = Repo.one(query)
   end
 
   def get_detailed_user_rooms(user_id) do

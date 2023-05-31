@@ -157,7 +157,7 @@ defmodule ChatWeb.ChatController do
 
     with :ok <- Bodyguard.permit(Chats, :get_room_messages, user_id, room_id),
          room <- Chats.get_detailed_user_room_by_id(user_id, room_id) do
-      render(conn, "show_detailed_room_with_users.json", room: room)
+      render(conn, "show_detailed_room_with_users.json", room_with_users: room)
     end
   end
 
