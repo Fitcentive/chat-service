@@ -394,6 +394,16 @@ defmodule Chat.Repo.Chats do
     |> Repo.one
   end
 
+  def get_user_last_seen_if_exists_for_rooms(room_ids, user_id) do
+    query =
+      from user_last_seen in UserLastSeen,
+           select: user_last_seen,
+           where: user_last_seen.room_id in ^room_ids and user_last_seen.user_id == ^user_id
+
+    query
+    |> Repo.all
+  end
+
   def get_users_for_room(room_id) do
     query =
       from room_user in RoomUser,
