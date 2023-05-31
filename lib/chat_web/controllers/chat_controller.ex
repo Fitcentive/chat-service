@@ -152,6 +152,14 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def get_detailed_user_rooms(conn, _params) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with rooms <- Chats.get_detailed_user_rooms(user_id) do
+      render(conn, "show_detailed_rooms.json", rooms: rooms)
+    end
+  end
+
   def delete_user_data(conn, params = %{"user_id" => user_id}) do
     {deleted_user_id_config, _} = :deleted_user_id
                           |> Application.get_env(__MODULE__, %{})

@@ -11,6 +11,10 @@ defmodule ChatWeb.ChatView do
     render_many(rooms, ChatView, "show_room_with_users.json", as: :room_with_users)
   end
 
+  def render("show_detailed_rooms.json", %{rooms: rooms}) do
+    render_many(rooms, ChatView, "show_detailed_room_with_users.json", as: :room_with_users)
+  end
+
   def render("show_user_room_last_seens.json", %{user_room_last_seens: user_room_last_seens}) do
     render_many(user_room_last_seens, ChatView, "show_user_last_seen.json", as: :user_last_seen)
   end
@@ -19,6 +23,20 @@ defmodule ChatWeb.ChatView do
     %{
       room_id: UUID.binary_to_string!(room_with_users.room_id),
       user_ids: Enum.map(room_with_users.user_ids, &(UUID.binary_to_string!(&1))),
+    }
+  end
+
+  def render("show_detailed_room_with_users.json", %{room_with_users: room_with_users}) do
+    %{
+      most_recent_message: room_with_users.most_recent_message,
+      most_recent_message_timestamp: room_with_users.most_recent_message_timestamp,
+      room_id: room_with_users.room.id,
+      room_name: room_with_users.room.name,
+      room_type: room_with_users.room.type,
+      enabled: room_with_users.room.enabled,
+      created_at: room_with_users.room.created_at,
+      updated_at: room_with_users.room.updated_at,
+      user_ids: Enum.map(room_with_users.users, &(UUID.binary_to_string!(&1))),
     }
   end
 

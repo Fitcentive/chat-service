@@ -230,6 +230,17 @@ defmodule Chat.Repo.Chats do
     |> Repo.all
   end
 
+  def most_recent_room_messages(room_id) do
+    query =
+      from m in Message,
+           distinct: m.room_id,
+           where: m.room_id == ^room_id,
+           order_by: [asc: m.room_id, desc: m.created_at],
+           select: %{room_id: m.room_id, most_recent_message: m.text, most_recent_message_time: m.created_at}
+    query
+    |> Repo.one
+  end
+
   def get_room_definitions(room_ids, user_id) do
     query =
       from room in Room,
@@ -285,6 +296,24 @@ defmodule Chat.Repo.Chats do
       |> order_by([row], [desc: row.most_recent_message_time])
       |> Repo.all
 
+  end
+
+  def get_detailed_user_rooms(user_id) do
+    query =
+      from r in Room,
+           join: ru in RoomUser, on: r.id == ru.room_id,
+           left_join: m in Message, on: m.room_id == r.id,
+           group_by: r.id,
+           order_by: fragment("MAX(?) DESC", m.created_at),
+           where: r.enabled and ru.user_id == ^user_id,
+           select: %{
+             room: r,
+             users: fragment("array_agg(?)", ru.user_id),
+             most_recent_message: fragment("(array_agg(? ORDER BY ? DESC))[1]", m.text, m.created_at),
+             most_recent_message_timestamp: max(m.created_at)
+           }
+
+    result = Repo.all(query)
   end
 
   def get_messages(room_id, sent_before, _limit) do
