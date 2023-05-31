@@ -298,6 +298,24 @@ defmodule Chat.Repo.Chats do
 
   end
 
+  def get_detailed_user_room_by_id(user_id, room_id) do
+    query =
+      from r in Room,
+           join: ru in RoomUser, on: r.id == ru.room_id,
+           left_join: m in Message, on: m.room_id == r.id,
+           group_by: r.id,
+           order_by: fragment("MAX(?) DESC", m.created_at),
+           where: r.enabled and r.id == ^room_id,
+           select: %{
+             room: r,
+             users: fragment("array(select distinct unnest(array_agg(?)))", ru.user_id),
+             most_recent_message: fragment("(array_agg(? ORDER BY ? DESC))[1]", m.text, m.created_at),
+             most_recent_message_timestamp: max(m.created_at)
+           }
+
+    result = Repo.all(query)
+  end
+
   def get_detailed_user_rooms(user_id) do
     user_allowed_chat_rooms_query =
       from room_user in RoomUser,

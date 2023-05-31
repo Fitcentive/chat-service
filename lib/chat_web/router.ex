@@ -58,6 +58,7 @@ defmodule ChatWeb.Router do
 
     get "/user/rooms",                      ChatController, :get_user_rooms
     get "/user/detailed-rooms",             ChatController, :get_detailed_user_rooms
+    get "/user/get-detailed-room",          ChatController, :get_detailed_room
 
    end
 

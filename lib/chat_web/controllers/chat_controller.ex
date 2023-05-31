@@ -152,6 +152,15 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  def get_detailed_room(conn, %{"room_id" => room_id}) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :get_room_messages, user_id, room_id),
+         room <- Chats.get_detailed_user_room_by_id(user_id, room_id) do
+      render(conn, "show_detailed_room_with_users.json", room: room)
+    end
+  end
+
   def get_detailed_user_rooms(conn, _params) do
     user_id = conn.assigns[:claims]["user_id"]
 
