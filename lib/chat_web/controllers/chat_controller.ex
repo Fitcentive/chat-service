@@ -161,10 +161,10 @@ defmodule ChatWeb.ChatController do
     end
   end
 
-  def get_detailed_user_rooms(conn, _params) do
+  def get_detailed_user_rooms(conn, %{"limit" => limit, "offset" => offset}) do
     user_id = conn.assigns[:claims]["user_id"]
 
-    with rooms <- Chats.get_detailed_user_rooms(user_id) do
+    with rooms <- Chats.get_detailed_user_rooms(user_id, limit, offset) do
       render(conn, "show_detailed_rooms.json", rooms: rooms)
     end
   end

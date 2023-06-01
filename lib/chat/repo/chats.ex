@@ -316,7 +316,7 @@ defmodule Chat.Repo.Chats do
     result = Repo.one(query)
   end
 
-  def get_detailed_user_rooms(user_id) do
+  def get_detailed_user_rooms(user_id, room_limit, room_offset) do
     user_allowed_chat_rooms_query =
       from room_user in RoomUser,
            select: %{
@@ -336,7 +336,9 @@ defmodule Chat.Repo.Chats do
              users: fragment("array(select distinct unnest(array_agg(?)))", ru.user_id),
              most_recent_message: fragment("(array_agg(? ORDER BY ? DESC))[1]", m.text, m.created_at),
              most_recent_message_timestamp: max(m.created_at)
-           }
+           },
+           limit: ^room_limit,
+           offset: ^room_offset
 
     result = Repo.all(query)
   end
