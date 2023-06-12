@@ -224,7 +224,7 @@ defmodule ChatWeb.ChatController do
 
     with :ok <- Bodyguard.permit(Chats, :check_if_user_is_room_admin, current_user_id, room_id),
          _ <- Chats.remove_admin_for_room(room_id, user_id) do
-      render(conn, :no_content, "")
+      send_resp(conn, :no_content, "")
     end
   end
 
