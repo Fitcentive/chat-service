@@ -7,7 +7,7 @@ defmodule Chat.Schema.RoomAdmins do
   @timestamps_opts [type: :utc_datetime]
 
   @primary_key false
-  schema "user_last_seen" do
+  schema "room_admins" do
     field :user_id, Ecto.UUID, primary_key: true
     field :room_id, Ecto.UUID, primary_key: true
 
@@ -21,11 +21,11 @@ defmodule Chat.Schema.RoomAdmins do
     timestamps(inserted_at: :created_at)
   end
 
-  def changeset(room_user, params \\ %{}) do
+  def changeset(room_admin, params \\ %{}) do
     time = DateTime.utc_now()
            |> DateTime.truncate(:second)
 
-    room_user
+    room_admin
     |> cast(params, [:room_id, :user_id])
     |> validate_required([:room_id, :user_id])
     |> put_change(:created_at, time)
