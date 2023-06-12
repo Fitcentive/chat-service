@@ -27,6 +27,7 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  # This method is used when a chat room is created for a meetup
   def get_chat_room(conn, params = %{"room_name" => room_name, "target_users" => target_users = [h | t]}) do
     user_id = conn.assigns[:claims]["user_id"]
     with :ok <- Bodyguard.permit(Chats, :check_if_all_users_exist, user_id, target_users),
@@ -42,6 +43,7 @@ defmodule ChatWeb.ChatController do
     end
   end
 
+  # This method is used when a group chat room is created by a user with a list of new users
   def get_chat_room(conn, %{"target_users" => target_users}) when is_list(target_users) do
     user_id = conn.assigns[:claims]["user_id"]
     with :ok <- Bodyguard.permit(Chats, :check_if_all_users_exist, user_id, target_users),
@@ -53,6 +55,7 @@ defmodule ChatWeb.ChatController do
          new_room <- %{id: room_id, name: room_name, type: "group", enabled: true},
          room <- Chats.upsert_room(new_room),
          _ <- Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => user_id}),
+         _ <- Chats.upsert_room_admin(%{"room_id" => room.id, "user_id" => user_id}),
          _ <- target_users
               |> Enum.map(
                    fn other_user -> Chats.upsert_room_user(%{"room_id" => room.id, "user_id" => other_user}) end
