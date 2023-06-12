@@ -10,6 +10,7 @@ defmodule Chat.Repo.Chats do
   alias Chat.Schema.RoomUser
   alias Chat.Schema.User
   alias Chat.Schema.UserLastSeen
+  alias Chat.Schema.RoomAdmins
 
   alias Chat.Repo.Chats
 
@@ -26,6 +27,17 @@ defmodule Chat.Repo.Chats do
     case Chats.get_room_user_if_exists(room_id, user_id) do
       nil -> :error
       _   -> :ok
+    end
+  end
+
+  def authorize(:check_if_user_is_room_admin, user_id, room_id) do
+    case Chats.get_room_admins(room_id) do
+      nil      -> :error
+      admins   ->
+        case Enum.map(admins, fn admin -> admin.user_id end) |> Enum.member?(user_id) do
+          true  -> :ok
+          false -> :error
+        end
     end
   end
 
@@ -107,6 +119,13 @@ defmodule Chat.Repo.Chats do
     )
   end
 
+  defp room_admin_changeset(room_admin_params) do
+    RoomAdmins.changeset(
+      %RoomAdmins{},
+      Map.merge(room_admin_params, %{})
+    )
+  end
+
   defp user_last_seen_changeset(room_user_params) do
     UserLastSeen.changeset(
       %UserLastSeen{},
@@ -137,6 +156,15 @@ defmodule Chat.Repo.Chats do
   def upsert_room_user(room_user_params) do
     Repo.insert!(
       room_user_changeset(room_user_params),
+      on_conflict: {:replace, [:updated_at]},
+      conflict_target: [:room_id, :user_id],
+      returning: true,
+    )
+  end
+
+  def upsert_room_admin(room_admin_params) do
+    Repo.insert!(
+      room_admin_changeset(room_admin_params),
       on_conflict: {:replace, [:updated_at]},
       conflict_target: [:room_id, :user_id],
       returning: true,
@@ -471,6 +499,24 @@ defmodule Chat.Repo.Chats do
     query =
       from room in Room,
            where: room.id == ^room_id
+
+    query
+    |> Repo.delete_all()
+  end
+
+  def get_room_admins(room_id) do
+    query =
+      from room_admin in RoomAdmins,
+        where: room_admin.room_id == ^room_id
+
+    query
+      |> Repo.all()
+  end
+
+  def remove_admin_for_room(room_id, user_id) do
+    query =
+      from room_admin in RoomAdmins,
+           where: room_admin.room_id == ^room_id and room_admin.user_id == ^user_id
 
     query
     |> Repo.delete_all()

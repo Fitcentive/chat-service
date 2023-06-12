@@ -78,6 +78,8 @@ spec:
               value: "api.fitcentive.xyz"
             - name: TOPIC_CHAT_ROOM_MESSAGE_SENT
               value: "chat-room-message-sent"
+            - name: POOL_SIZE
+              value: "20"
       volumes:
         - name: cloudsql-creds
           secret:

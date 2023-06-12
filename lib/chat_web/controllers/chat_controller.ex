@@ -207,6 +207,33 @@ defmodule ChatWeb.ChatController do
 
   end
 
+  def get_room_admins(conn, %{"room_id" => room_id}) do
+    user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_belongs_to_room, user_id, room_id),
+         room_admins <- Chats.get_room_admins(room_id) do
+      render(conn, "show_room_admins.json", room_admins: room_admins)
+    end
+  end
+
+  def remove_room_admin(conn, %{"room_id" => room_id, "user_id" => user_id}) do
+    current_user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_is_room_admin, current_user_id, room_id),
+         _ <- Chats.remove_admin_for_room(room_id, user_id) do
+      render(conn, :no_content, "")
+    end
+  end
+
+  def add_room_admin(conn, params = %{"room_id" => room_id, "user_id" => user_id}) do
+    current_user_id = conn.assigns[:claims]["user_id"]
+
+    with :ok <- Bodyguard.permit(Chats, :check_if_user_is_room_admin, current_user_id, room_id),
+         room_admin <- Chats.upsert_room_admin(params) do
+      render(conn, "show_room_admin.json", room_admin: room_admin)
+    end
+  end
+
   defp datetime_to_epoch_milliseconds(datetime) do
     datetime
     |> Ecto.DateTime.to_erl

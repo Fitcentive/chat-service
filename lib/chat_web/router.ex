@@ -37,28 +37,32 @@ defmodule ChatWeb.Router do
     pipe_through :authentication
     pipe_through :api
 
-    post "/",                               ChatController, :upsert_user
-    post "/get-chat-rooms",                 ChatController, :get_chat_room_definitions
-    post "/get-chat-room",                  ChatController, :get_chat_room
+    post "/",                                         ChatController, :upsert_user
+    post "/get-chat-rooms",                           ChatController, :get_chat_room_definitions
+    post "/get-chat-room",                            ChatController, :get_chat_room
 
-    get    "/room/:room_id/messages",       ChatController, :get_room_messages
+    get    "/room/:room_id/messages",                 ChatController, :get_room_messages
 
-    put    "/room/:room_id",                ChatController, :update_room_name
-    get    "/room/:room_id/users",          ChatController, :get_room_users
-    post   "/room/:room_id/users/:user_id", ChatController, :add_user_to_room
-    delete "/room/:room_id/users/:user_id", ChatController, :remove_user_from_room
+    put    "/room/:room_id",                          ChatController, :update_room_name
+    get    "/room/:room_id/users",                    ChatController, :get_room_users
+    post   "/room/:room_id/users/:user_id",           ChatController, :add_user_to_room
+    delete "/room/:room_id/users/:user_id",           ChatController, :remove_user_from_room
 
-    put    "/room/:room_id/last-seen",      ChatController, :upsert_user_last_seen
+    get    "/room/:room_id/admins",                   ChatController, :get_room_admins
+    delete "/room/:room_id/admins/:user_id",          ChatController, :remove_room_admin
+    post   "/room/:room_id/admins/:user_id",          ChatController, :add_room_admin
 
-    post   "/room/get-last-seen",           ChatController, :get_user_last_seen
+    put    "/room/:room_id/last-seen",                ChatController, :upsert_user_last_seen
+
+    post   "/room/get-last-seen",                     ChatController, :get_user_last_seen
 
 
-    post "/room/most-recent-message",       ChatController, :get_most_recent_room_messages
+    post "/room/most-recent-message",                 ChatController, :get_most_recent_room_messages
 
 
-    get "/user/rooms",                      ChatController, :get_user_rooms
-    get "/user/detailed-rooms",             ChatController, :get_detailed_user_rooms
-    get "/user/get-detailed-room",          ChatController, :get_detailed_room
+    get "/user/rooms",                                ChatController, :get_user_rooms
+    get "/user/detailed-rooms",                       ChatController, :get_detailed_user_rooms
+    get "/user/get-detailed-room",                    ChatController, :get_detailed_room
 
    end
 

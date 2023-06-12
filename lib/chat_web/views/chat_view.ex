@@ -19,6 +19,10 @@ defmodule ChatWeb.ChatView do
     render_many(user_room_last_seens, ChatView, "show_user_last_seen.json", as: :user_last_seen)
   end
 
+  def render("show_room_admins.json", %{room_admins: room_admins}) do
+    render_many(room_admins, ChatView, "show_room_admin.json", as: :room_admin)
+  end
+
   def render("show_room_with_users.json", %{room_with_users: room_with_users}) do
     %{
       room_id: UUID.binary_to_string!(room_with_users.room_id),
@@ -67,6 +71,15 @@ defmodule ChatWeb.ChatView do
         updated_at: user_last_seen.updated_at
       }
     end
+  end
+
+  def render("show_room_admin.json", %{room_admin: room_admin}) do
+    %{
+      room_id: room_admin.room_id,
+      user_id: room_admin.user_id,
+      created_at: room_admin.created_at,
+      updated_at: room_admin.updated_at
+    }
   end
 
 
