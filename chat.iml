@@ -68,6 +68,13 @@
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/finch" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/cors_plug" />
       <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/websockex" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/protobuf" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/weddell" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/grpc" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/gun" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/tesla" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/phoenix_template" />
+      <excludeFolder url="file://$MODULE_DIR$/_build/dev/lib/expo" />
     </content>
     <orderEntry type="jdk" jdkName="Elixir 1.13.4" jdkType="Elixir SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -160,5 +167,28 @@
     <orderEntry type="library" name="hpack" level="project" />
     <orderEntry type="library" name="cors_plug" level="project" />
     <orderEntry type="library" name="websockex" level="project" />
+    <orderEntry type="library" name="mox" level="project" />
+    <orderEntry type="library" name="thoas" level="project" />
+    <orderEntry type="library" name="weddell" level="project" />
+    <orderEntry type="library" name="protobuf" level="project" />
+    <orderEntry type="library" name="grpc" level="project" />
+    <orderEntry type="library" name="certifi" level="project" />
+    <orderEntry type="library" name="wait_for_it" level="project" />
+    <orderEntry type="library" name="apex" level="project" />
+    <orderEntry type="library" name="inch_ex" level="project" />
+    <orderEntry type="library" name="google_protobuf" level="project" />
+    <orderEntry type="library" name="gun" level="project" />
+    <orderEntry type="library" name="cowlib" level="project" />
+    <orderEntry type="library" name="html5ever" level="project" />
+    <orderEntry type="library" name="fast_html" level="project" />
+    <orderEntry type="library" name="expo" level="project" />
+    <orderEntry type="library" name="tesla" level="project" />
+    <orderEntry type="library" name="phoenix_template" level="project" />
+    <orderEntry type="library" name="ssl_verify_fun" level="project" />
+    <orderEntry type="library" name="ibrowse" level="project" />
+    <orderEntry type="library" name="msgpax" level="project" />
+    <orderEntry type="library" name="fuse" level="project" />
+    <orderEntry type="library" name="opentelemetry_process_propagator" level="project" />
+    <orderEntry type="library" name="ranch" level="project" />
   </component>
 </module>

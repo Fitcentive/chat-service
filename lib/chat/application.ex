@@ -7,6 +7,14 @@ defmodule Chat.Application do
 
   @impl true
   def start(_type, _args) do
+    credentials =
+      "GOOGLE_APPLICATION_CREDENTIALS"
+      |> System.fetch_env!()
+      |> Jason.decode!()
+
+    source = {:service_account, credentials}
+
+
     children = [
       # Start the Ecto repository
       Chat.Repo,
@@ -16,9 +24,11 @@ defmodule Chat.Application do
       {Phoenix.PubSub, name: Chat.PubSub},
       ChatWeb.Presence,
       # Start the Endpoint (http/https)
-      ChatWeb.Endpoint
+      ChatWeb.Endpoint,
       # Start a worker by calling: Chat.Worker.start_link(arg)
       # {Chat.Worker, arg}
+      {Goth, name: Chat.Goth, source: source},
+      {ChatWeb.GcpPubSubSubscriber, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

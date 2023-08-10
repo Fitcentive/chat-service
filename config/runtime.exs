@@ -141,8 +141,22 @@ if config_env() == :prod do
     json: {:system, "GOOGLE_APPLICATION_CREDENTIALS"}
 
   config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
-    topics: %{
-     chat_room_message_sent: System.get_env("TOPIC_CHAT_ROOM_MESSAGE_SENT")
+    config: %{
+     "project_id" => System.get_env("GCP_PROJECT_ID"),
+     "topics" => %{
+       chat_room_message_sent: System.get_env("TOPIC_CHAT_ROOM_MESSAGE_SENT")
+     },
+     "pod_name" => System.get_env("POD_NAME")
+    }
+
+  config :gcp_pubsub_subscriber, ChatWeb.GcpPubSubSubscriber,
+    config: %{
+      "project_id" => System.get_env("GCP_PROJECT_ID"),
+      "topics" => %{
+        chat_room_message_sent: System.get_env("TOPIC_CHAT_ROOM_MESSAGE_SENT")
+      },
+      "pod_name" => System.get_env("POD_NAME"),
+      "secret" => System.get_env("INTERNAL_SERVICE_SECRET")
     }
 
 

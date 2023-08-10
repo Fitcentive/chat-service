@@ -20,6 +20,11 @@ defmodule ChatWeb.ChatRoomChannel do
   end
 
   @impl true
+  def join("chat_room:" <> room_id, payload, socket) do
+      {:ok, assign(socket, :room_id, room_id)}
+  end
+
+  @impl true
   def handle_info(:after_join, socket) do
     {:ok, _} = Presence.track(socket, socket.assigns.user_id, %{
       online_at: inspect(System.system_time(:second))
@@ -81,6 +86,7 @@ defmodule ChatWeb.ChatRoomChannel do
       "room_id" => room_id,
       "text" => text,
     }) do
+      # Notify everyone else in this channel
       broadcast(socket, "shout", payload)
       send_push_notifications_to_offline_users(socket, room_id, user_id, text)
       with room_users <- Chats.get_users_for_room(room_id) do
@@ -93,6 +99,24 @@ defmodule ChatWeb.ChatRoomChannel do
       {:noreply, socket}
       end
     end
+  end
+
+  @impl true
+  def handle_in("echo", %{"body" => text} = payload, socket) do
+    room_id = socket.assigns[:room_id]
+
+    # Notify everyone else in this channel
+    broadcast(socket, "shout", payload)
+    with room_users <- Chats.get_users_for_room(room_id) do
+      Enum.map(
+        room_users.user_ids,
+        fn user_id ->
+          send_room_updated_broadcast_socket_channel_message(room_id, UUID.binary_to_string!(user_id))
+        end
+      )
+      {:noreply, socket}
+    end
+
   end
 
   defp send_room_updated_broadcast_socket_channel_message(room_id, user_id) do

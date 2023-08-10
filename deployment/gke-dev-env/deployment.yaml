@@ -1,12 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: chat-service
   namespace: chat
   labels:
     app: chat-service
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: chat-service
@@ -44,14 +44,14 @@ spec:
             httpGet:
               path: /api/chat/health
               port: 4000
-            initialDelaySeconds: 60
-            periodSeconds: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /api/chat/health
               port: 4000
-            initialDelaySeconds: 120
-            periodSeconds: 15
+            initialDelaySeconds: 20
+            periodSeconds: 10
           envFrom:
             - secretRef:
                 name: internal-service-secret
@@ -70,6 +70,8 @@ spec:
             - secretRef:
                 name: chat-service-apple-auth-public-credentials
           env:
+            - name: GCP_PROJECT_ID
+              value: "fitcentive-dev-03"
             - name: DELETED_USER_ID
               value: "aaaaaaaa-aaaa-8bbb-8bbb-aaaaaaaaaaaa"
             - name: SECRET_KEY_BASE
@@ -80,6 +82,10 @@ spec:
               value: "chat-room-message-sent"
             - name: POOL_SIZE
               value: "20"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
       volumes:
         - name: cloudsql-creds
           secret:

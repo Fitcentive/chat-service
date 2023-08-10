@@ -54,7 +54,7 @@ defmodule Chat.MixProject do
       {:poison, "~> 5.0"},
       {:elixir_uuid, "~> 1.2" },
       {:bodyguard, "~> 2.4"},
-      {:kane, "~> 0.9.0"},
+      {:kane, "~> 1.0.0"},
       {:cors_plug, "~> 3.0"},
       {:websockex, "~> 0.4.3"},
     ]

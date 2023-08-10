@@ -104,6 +104,23 @@ config :auth_tokens, ChatWeb.Authentication.VerifyBearerToken,
   }
 
 config :gcp_pubsub_client, ChatWeb.GcpPubSubClient,
-  topics: %{
-    chat_room_message_sent: "chat-room-message-sent"
+  config: %{
+    "project_id" => "fitcentive-dev-03",
+    "topics" => %{
+      chat_room_message_sent: "chat-room-message-sent"
+    },
+    "pod_name" => "local"
   }
+
+config :gcp_pubsub_subscriber, ChatWeb.GcpPubSubSubscriber,
+  config: %{
+   "project_id" => "fitcentive-dev-03",
+    "topics" => %{
+      chat_room_message_sent: "chat-room-message-sent"
+    },
+   "pod_name" => "local",
+   "secret" => "ymmtuBE62NJRIro6eCBxl5wcIZvmKg3nSTgP2YSyjOB5fq3S0ZNFXdY1DLUBo8ji"
+  }
+
+config :goth,
+    json: {:system, "GOOGLE_APPLICATION_CREDENTIALS"}

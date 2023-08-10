@@ -17,6 +17,7 @@ defmodule ChatWeb.UserRoomObserverChannel do
     end
   end
 
+  # Uses opaque secret so no socket assigns for user_id
   @impl true
   def join("user_room_observer:" <> user_id_channel_param, payload, socket) do
     {:ok, assign(socket, :user_id, user_id_channel_param)}
