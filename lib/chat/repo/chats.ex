@@ -357,7 +357,7 @@ defmodule Chat.Repo.Chats do
            join: ru in RoomUser, on: r.id == ru.room_id,
            left_join: m in Message, on: m.room_id == r.id,
            group_by: r.id,
-           order_by: fragment("MAX(?) DESC", m.created_at),
+           order_by: fragment("MAX(COALESCE(?, ?)) DESC", m.created_at, r.created_at),
            where: r.enabled and r.id in subquery(user_allowed_chat_rooms_query),
            select: %{
              room: r,
