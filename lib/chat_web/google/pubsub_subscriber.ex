@@ -20,7 +20,7 @@ defmodule ChatWeb.GcpPubSubSubscriber do
 
   def init_subscription() do
     {:ok, token} = Goth.fetch(Chat.Goth)
-    config = ChatWeb.GcpPubSubSubscriber.pubsub_config
+    config = pubsub_config()
     topic = %Kane.Topic{name: config["topics"][:chat_room_message_sent]}
     kane = %Kane{
       project_id: config["project_id"],
@@ -124,7 +124,7 @@ defmodule ChatWeb.GcpPubSubSubscriber do
     WebSockex.send_frame(newSocket, {:close, 1000, "Closing message"})
   end
 
-  defp pubsub_config do
+  defp pubsub_config() do
     {config, _} =
       :gcp_pubsub_subscriber
       |> Application.get_env(__MODULE__, %{})
