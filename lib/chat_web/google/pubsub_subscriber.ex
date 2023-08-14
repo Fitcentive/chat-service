@@ -6,6 +6,30 @@ defmodule ChatWeb.GcpPubSubSubscriber do
   use GenServer
   use WebSockex
 
+  def pubsub_config() do
+    {config, _} =
+      :gcp_pubsub_subscriber
+      |> Application.get_env(__MODULE__, %{})
+      |> Keyword.split([:config])
+
+    case config do
+      [config: config_map] -> config_map
+      _ -> raise "No config found for #{__MODULE__}"
+    end
+  end
+
+  def pod_name do
+    {config, _} =
+      :gcp_pubsub_subscriber
+      |> Application.get_env(__MODULE__, %{})
+      |> Keyword.split([:config])
+
+    case config do
+      [config: config_map] -> config_map["pod_name"]
+      _ -> raise "No config found for #{__MODULE__}"
+    end
+  end
+
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
@@ -122,30 +146,6 @@ defmodule ChatWeb.GcpPubSubSubscriber do
     })})
 
     WebSockex.send_frame(newSocket, {:close, 1000, "Closing message"})
-  end
-
-  defp pubsub_config() do
-    {config, _} =
-      :gcp_pubsub_subscriber
-      |> Application.get_env(__MODULE__, %{})
-      |> Keyword.split([:config])
-
-    case config do
-      [config: config_map] -> config_map
-      _ -> raise "No config found for #{__MODULE__}"
-    end
-  end
-
-  defp pod_name do
-    {config, _} =
-      :gcp_pubsub_subscriber
-      |> Application.get_env(__MODULE__, %{})
-      |> Keyword.split([:config])
-
-    case config do
-      [config: config_map] -> config_map["pod_name"]
-      _ -> raise "No config found for #{__MODULE__}"
-    end
   end
 
 end
