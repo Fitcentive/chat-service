@@ -2,11 +2,11 @@ import Config
 
 # Configure your database
 config :chat, Chat.Repo,
-  username: "chat",
-  password: "8zMRnE8PHqc2exha",
+  username: "postgres",
+  password: "postgres",
   hostname: "localhost",
-  port: 6666,
-  database: "chat-db",
+  port: 1212,
+  database: "postgres",
 
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
