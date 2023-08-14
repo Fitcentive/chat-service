@@ -28,7 +28,7 @@ defmodule Chat.Application do
       # Start a worker by calling: Chat.Worker.start_link(arg)
       # {Chat.Worker, arg}
       {Goth, name: Chat.Goth, source: source},
-      {ChatWeb.GcpPubSubSubscriber, []}
+      {ChatWeb.GcpPubSubSubscriber, 500} # poll every 500 ms
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

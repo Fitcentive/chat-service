@@ -7,65 +7,68 @@ defmodule ChatWeb.GcpPubSubSubscriber do
   use WebSockex
 
   def start_link(opts) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def init(state) do
-    subscribe_to_stateful_chat_room_message_sent_event()
+  @impl true
+  def init(period_in_millis) do
+    init_subscription()
+    poll_for_chat_room_message_sent_event()
+    schedule_next_token_refresh(period_in_millis)
+    {:ok, period_in_millis}
   end
 
-  def pubsub_config do
-    {config, _} =
-      :gcp_pubsub_subscriber
-      |> Application.get_env(__MODULE__, %{})
-      |> Keyword.split([:config])
-
-    case config do
-      [config: config_map] -> config_map
-      _ -> raise "No config found for #{__MODULE__}"
-    end
-  end
-
-  def pod_name do
-    {config, _} =
-      :gcp_pubsub_subscriber
-      |> Application.get_env(__MODULE__, %{})
-      |> Keyword.split([:config])
-
-    case config do
-      [config: config_map] -> config_map["pod_name"]
-      _ -> raise "No config found for #{__MODULE__}"
-    end
-  end
-
-  def subscribe_to_stateful_chat_room_message_sent_event() do
+  def init_subscription() do
     {:ok, token} = Goth.fetch(Chat.Goth)
-
     config = ChatWeb.GcpPubSubSubscriber.pubsub_config
-    pubsub_topics = config["topics"]
+    topic = %Kane.Topic{name: config["topics"][:chat_room_message_sent]}
+    kane = %Kane{
+      project_id: config["project_id"],
+      token: token
+    }
+    subscription = %Kane.Subscription{
+      name: "#{config["topics"][:chat_room_message_sent]}-#{pod_name()}",
+      topic: %Kane.Topic{
+        name: topic
+      }
+    }
+    # Could result in error, we do not care, it is idempotent
+    Kane.Subscription.create(kane, subscription)
+  end
 
-    topic = %Kane.Topic{name: pubsub_topics[:chat_room_message_sent]}
+  @impl true
+  def handle_info(:poll_for_subscription, period_in_millis) do
+    poll_for_chat_room_message_sent_event()
+    schedule_next_token_refresh(period_in_millis)
+    {:noreply, period_in_millis}
+  end
 
+  def schedule_next_token_refresh(period_in_millis) do
+    IO.inspect(period_in_millis)
+    Process.send_after(self(), :poll_for_subscription, period_in_millis)
+  end
+
+  def poll_for_chat_room_message_sent_event() do
+    {:ok, token} = Goth.fetch(Chat.Goth)
+    config = ChatWeb.GcpPubSubSubscriber.pubsub_config
+    topic = %Kane.Topic{name: config["topics"][:chat_room_message_sent]}
     kane = %Kane{
       project_id: config["project_id"],
       token: token
     }
 
     subscription = %Kane.Subscription{
-      name: "#{pubsub_topics[:chat_room_message_sent]}-#{pod_name()}",
+      name: "#{config["topics"][:chat_room_message_sent]}-#{pod_name()}",
       topic: %Kane.Topic{
         name: topic
       }
     }
 
-    # Could result in error, we do not care, it is idempotent
-    Kane.Subscription.create(kane, subscription)
-
-    Kane.Subscription.stream(kane, subscription)
-    |> Enum.map(fn message ->
-          process_message(message)
-          Kane.Subscription.ack(kane, subscription, message)
-       end)
+    {:ok, messages} = Kane.Subscription.pull(kane, subscription)
+    Enum.each messages, fn(message)->
+      process_message(message)
+      Kane.Subscription.ack(kane, subscription, message)
+    end
 
   end
 
@@ -119,6 +122,30 @@ defmodule ChatWeb.GcpPubSubSubscriber do
     })})
 
     WebSockex.send_frame(newSocket, {:close, 1000, "Closing message"})
+  end
+
+  defp pubsub_config do
+    {config, _} =
+      :gcp_pubsub_subscriber
+      |> Application.get_env(__MODULE__, %{})
+      |> Keyword.split([:config])
+
+    case config do
+      [config: config_map] -> config_map
+      _ -> raise "No config found for #{__MODULE__}"
+    end
+  end
+
+  defp pod_name do
+    {config, _} =
+      :gcp_pubsub_subscriber
+      |> Application.get_env(__MODULE__, %{})
+      |> Keyword.split([:config])
+
+    case config do
+      [config: config_map] -> config_map["pod_name"]
+      _ -> raise "No config found for #{__MODULE__}"
+    end
   end
 
 end
